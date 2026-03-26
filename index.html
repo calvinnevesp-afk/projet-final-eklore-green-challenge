@@ -1,0 +1,2228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"/>
+<meta name="mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="theme-color" content="#0a1f12"/>
+<title>🌱 Green Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Clash+Display:wght@400;500;600;700&family=Bricolage+Grotesque:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+  --black: #060d08;
+  --dark: #0a1f12;
+  --dark2: #122b1a;
+  --mid: #1e4a2a;
+  --green: #2aad5c;
+  --green-light: #3dd675;
+  --lime: #a8ff3e;
+  --lime2: #c5ff6e;
+  --white: #f0fdf4;
+  --muted: rgba(240,253,244,0.5);
+  --card: rgba(255,255,255,0.04);
+  --card-border: rgba(255,255,255,0.08);
+  --gold: #ffd060;
+  --silver: #c8d6e5;
+  --bronze: #e8a87c;
+  --danger: #ff5c5c;
+  --h: 'Bricolage Grotesque', sans-serif;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: var(--h);
+  background: var(--black);
+  color: var(--white);
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: hidden;
+}
+
+/* ── SCROLLBAR ── */
+::-webkit-scrollbar { width: 0; }
+
+/* ── APP SHELL ── */
+#app {
+  max-width: 430px;
+  margin: 0 auto;
+  min-height: 100vh;
+  min-height: 100dvh;
+  position: relative;
+  background: var(--black);
+  display: flex;
+  flex-direction: column;
+}
+
+/* ── STATUS BAR GLOW ── */
+#app::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 50%; transform: translateX(-50%);
+  width: 430px; height: 300px;
+  background: radial-gradient(ellipse at top, rgba(42,173,92,0.15) 0%, transparent 70%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+/* ── CONTENT ── */
+.screen {
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-bottom: 90px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── TOP NAV ── */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 50;
+  padding: 16px 20px 12px;
+  background: rgba(6,13,8,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--card-border);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.topbar-logo {
+  font-size: 1.15rem;
+  font-weight: 800;
+  color: var(--lime);
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  letter-spacing: -0.02em;
+}
+
+.topbar-logo .dot {
+  width: 8px; height: 8px;
+  background: var(--green-light);
+  border-radius: 50%;
+  box-shadow: 0 0 10px var(--green-light);
+  animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.6; transform: scale(0.85); }
+}
+
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.pts-chip {
+  background: rgba(168,255,62,0.12);
+  border: 1px solid rgba(168,255,62,0.25);
+  color: var(--lime);
+  font-size: .78rem;
+  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav {
+  position: fixed;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 100%;
+  max-width: 430px;
+  z-index: 100;
+  background: rgba(6,13,8,0.92);
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+  border-top: 1px solid var(--card-border);
+  padding: 10px 0 max(10px, env(safe-area-inset-bottom));
+  display: flex;
+  justify-content: space-around;
+}
+
+.nav-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  padding: 6px 14px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  color: var(--muted);
+  transition: all 0.2s;
+  position: relative;
+}
+
+.nav-btn.active { color: var(--lime); }
+.nav-btn.active .nav-icon { background: rgba(168,255,62,0.12); color: var(--lime); }
+
+.nav-icon {
+  width: 42px; height: 42px;
+  border-radius: 14px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.2rem;
+  transition: all 0.2s;
+  background: transparent;
+}
+
+.nav-label {
+  font-size: .65rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ── HERO SECTION ── */
+.hero-section {
+  margin: 20px 16px;
+  border-radius: 24px;
+  overflow: hidden;
+  position: relative;
+  min-height: 240px;
+  background: linear-gradient(145deg, #1a3d22 0%, #0d2616 50%, var(--dark) 100%);
+  border: 1px solid rgba(42,173,92,0.2);
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+.hero-bg-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.25;
+  filter: saturate(1.2);
+}
+
+.hero-gradient {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to bottom, rgba(10,31,18,0.3) 0%, rgba(10,31,18,0.85) 100%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 24px 22px;
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(168,255,62,0.15);
+  border: 1px solid rgba(168,255,62,0.3);
+  color: var(--lime);
+  font-size: .72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  padding: 5px 12px;
+  border-radius: 100px;
+  margin-bottom: 14px;
+}
+
+.hero-title {
+  font-size: 1.55rem;
+  font-weight: 800;
+  line-height: 1.15;
+  margin-bottom: 10px;
+  letter-spacing: -0.02em;
+}
+
+.hero-desc {
+  font-size: .88rem;
+  color: rgba(240,253,244,0.7);
+  line-height: 1.55;
+  margin-bottom: 20px;
+}
+
+.hero-bottom {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.pts-badge {
+  background: var(--lime);
+  color: var(--black);
+  font-weight: 800;
+  font-size: .9rem;
+  padding: 8px 16px;
+  border-radius: 100px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.hero-participants {
+  display: flex;
+  align-items: center;
+  gap: -4px;
+}
+
+.hero-participants .av {
+  width: 28px; height: 28px;
+  border-radius: 50%;
+  background: var(--mid);
+  border: 2px solid var(--dark);
+  margin-left: -6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .65rem;
+  font-weight: 700;
+}
+
+.hero-participants .av:first-child { margin-left: 0; }
+
+.participants-count {
+  font-size: .78rem;
+  color: var(--muted);
+  margin-left: 8px;
+}
+
+/* ── SECTION HEADING ── */
+.section-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  margin-bottom: 12px;
+}
+
+.section-title {
+  font-size: 1.05rem;
+  font-weight: 800;
+  letter-spacing: -0.02em;
+}
+
+.section-link {
+  font-size: .78rem;
+  color: var(--green-light);
+  font-weight: 600;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+}
+
+/* ── CARDS ── */
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  overflow: hidden;
+  transition: transform 0.15s, border-color 0.15s;
+  position: relative;
+}
+
+.card:active { transform: scale(0.98); }
+.card.clickable { cursor: pointer; }
+.card.clickable:active { border-color: rgba(168,255,62,0.2); }
+
+.card-mx { margin: 0 16px; }
+.card-pad { padding: 18px; }
+
+/* ── STATS ROW ── */
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  padding: 0 16px;
+  margin-bottom: 24px;
+}
+
+.stat-item {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 16px 12px;
+  text-align: center;
+}
+
+.stat-emoji { font-size: 1.4rem; margin-bottom: 6px; }
+.stat-val { font-size: 1.4rem; font-weight: 800; letter-spacing: -0.02em; }
+.stat-val.green { color: var(--lime); }
+.stat-val.gold { color: var(--gold); }
+.stat-val.blue { color: #60a5fa; }
+.stat-lbl { font-size: .65rem; color: var(--muted); font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; margin-top: 2px; }
+
+/* ── FEED CARD ── */
+.feed-card {
+  margin: 0 16px 14px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  overflow: hidden;
+}
+
+.feed-header {
+  padding: 14px 16px 12px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.feed-avatar {
+  width: 40px; height: 40px;
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-weight: 800; font-size: .85rem;
+  flex-shrink: 0;
+}
+
+.feed-avatar.green { background: linear-gradient(135deg, var(--green), var(--green-light)); }
+.feed-avatar.lime { background: linear-gradient(135deg, var(--lime), #6ef09e); color: var(--black); }
+.feed-avatar.gold { background: linear-gradient(135deg, #ffd060, #ffaa00); color: var(--black); }
+.feed-avatar.blue { background: linear-gradient(135deg, #60a5fa, #3b82f6); }
+.feed-avatar.pink { background: linear-gradient(135deg, #f472b6, #ec4899); }
+
+.feed-name { font-size: .9rem; font-weight: 700; }
+.feed-meta { font-size: .72rem; color: var(--muted); margin-top: 1px; }
+
+.feed-challenge-tag {
+  margin: 0 16px 10px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(42,173,92,0.1);
+  border: 1px solid rgba(42,173,92,0.2);
+  color: var(--green-light);
+  font-size: .72rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.feed-img-wrap {
+  width: 100%;
+  height: 220px;
+  overflow: hidden;
+  position: relative;
+  background: var(--dark2);
+}
+
+.feed-img-wrap img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+
+.feed-img-placeholder {
+  width: 100%; height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  font-size: 2.5rem;
+}
+
+.feed-img-placeholder p { font-size: .78rem; color: var(--muted); }
+
+.feed-caption {
+  padding: 12px 16px 0;
+  font-size: .88rem;
+  color: rgba(240,253,244,0.8);
+  line-height: 1.5;
+}
+
+.feed-actions {
+  padding: 12px 16px 14px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  border-top: 1px solid var(--card-border);
+  margin-top: 12px;
+}
+
+.action-btn {
+  display: flex; align-items: center; gap: 6px;
+  background: none; border: none; cursor: pointer;
+  color: var(--muted); font-size: .82rem; font-weight: 600;
+  font-family: var(--h); transition: color 0.2s;
+  padding: 6px 0;
+}
+
+.action-btn.liked { color: #ff6b6b; }
+.action-btn:hover { color: var(--white); }
+.action-btn.liked:hover { color: #ff4444; }
+
+.feed-pts {
+  margin-left: auto;
+  background: rgba(168,255,62,0.1);
+  border: 1px solid rgba(168,255,62,0.2);
+  color: var(--lime);
+  font-size: .75rem;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 100px;
+}
+
+.comments-section {
+  padding: 0 16px 14px;
+  border-top: 1px solid var(--card-border);
+}
+
+.comment-item {
+  padding: 8px 0;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  font-size: .82rem;
+}
+
+.comment-author { font-weight: 700; color: var(--green-light); }
+.comment-text { color: rgba(240,253,244,0.75); margin-top: 2px; }
+
+.comment-input-row {
+  display: flex; gap: 8px; margin-top: 10px;
+}
+
+/* ── LEADERBOARD ── */
+.lb-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--card-border);
+  position: relative;
+}
+
+.lb-item:last-child { border-bottom: none; }
+
+.lb-rank {
+  width: 34px; height: 34px;
+  border-radius: 12px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: .85rem; font-weight: 800;
+  flex-shrink: 0;
+}
+
+.lb-rank.r1 { background: rgba(255,208,96,0.15); color: var(--gold); border: 1px solid rgba(255,208,96,0.3); }
+.lb-rank.r2 { background: rgba(200,214,229,0.1); color: var(--silver); border: 1px solid rgba(200,214,229,0.2); }
+.lb-rank.r3 { background: rgba(232,168,124,0.1); color: var(--bronze); border: 1px solid rgba(232,168,124,0.2); }
+.lb-rank.other { background: var(--card); color: var(--muted); border: 1px solid var(--card-border); font-size: .75rem; }
+
+.lb-info { flex: 1; min-width: 0; }
+.lb-name { font-size: .9rem; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.lb-sub { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+
+.lb-pts {
+  font-size: 1rem;
+  font-weight: 800;
+  color: var(--lime);
+  letter-spacing: -0.02em;
+}
+
+.lb-pts-lbl { font-size: .65rem; color: var(--muted); font-weight: 600; text-align: right; }
+
+.lb-me-badge {
+  position: absolute;
+  right: 16px;
+  top: 50%; transform: translateY(-50%);
+  background: rgba(168,255,62,0.12);
+  border: 1px solid rgba(168,255,62,0.25);
+  color: var(--lime);
+  font-size: .62rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 100px;
+}
+
+/* ── AUTH ── */
+.auth-screen {
+  min-height: 100vh;
+  min-height: 100dvh;
+  display: flex;
+  flex-direction: column;
+  background: var(--black);
+  position: relative;
+  overflow: hidden;
+}
+
+.auth-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.auth-orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+}
+
+.auth-orb-1 {
+  width: 300px; height: 300px;
+  background: rgba(42,173,92,0.2);
+  top: -80px; left: -80px;
+}
+
+.auth-orb-2 {
+  width: 200px; height: 200px;
+  background: rgba(168,255,62,0.08);
+  top: 200px; right: -60px;
+}
+
+.auth-orb-3 {
+  width: 250px; height: 250px;
+  background: rgba(42,173,92,0.1);
+  bottom: -100px; left: 20%;
+}
+
+.auth-top {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 32px 40px;
+  position: relative;
+  z-index: 1;
+  text-align: center;
+}
+
+.auth-icon {
+  width: 90px; height: 90px;
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+  border-radius: 28px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2.5rem;
+  margin-bottom: 28px;
+  box-shadow: 0 20px 60px rgba(42,173,92,0.3);
+}
+
+.auth-top h1 {
+  font-size: 2.2rem;
+  font-weight: 800;
+  letter-spacing: -0.03em;
+  line-height: 1.1;
+  margin-bottom: 12px;
+}
+
+.auth-top h1 span { color: var(--lime); }
+
+.auth-top p {
+  font-size: .9rem;
+  color: var(--muted);
+  line-height: 1.6;
+  max-width: 280px;
+}
+
+.auth-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.auth-chip {
+  background: rgba(255,255,255,0.06);
+  border: 1px solid rgba(255,255,255,0.1);
+  color: rgba(240,253,244,0.75);
+  font-size: .75rem;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 100px;
+}
+
+.auth-form-wrap {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--card-border);
+  border-radius: 32px 32px 0 0;
+  padding: 28px 24px max(24px, env(safe-area-inset-bottom));
+  position: relative;
+  z-index: 1;
+}
+
+.auth-tabs {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 4px;
+  margin-bottom: 24px;
+}
+
+.auth-tab {
+  flex: 1;
+  padding: 10px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--h);
+  font-size: .85rem;
+  font-weight: 600;
+  border-radius: 11px;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.auth-tab.active {
+  background: var(--green);
+  color: var(--white);
+  box-shadow: 0 4px 15px rgba(42,173,92,0.3);
+}
+
+/* ── INPUTS ── */
+.input-wrap {
+  margin-bottom: 14px;
+}
+
+.input-label {
+  display: block;
+  font-size: .78rem;
+  font-weight: 700;
+  color: rgba(240,253,244,0.6);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 7px;
+}
+
+.input, .select {
+  width: 100%;
+  padding: 14px 16px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  font-family: var(--h);
+  font-size: .92rem;
+  color: var(--white);
+  outline: none;
+  transition: border-color 0.2s, background 0.2s;
+  -webkit-appearance: none;
+}
+
+.input::placeholder { color: rgba(240,253,244,0.3); }
+.input:focus, .select:focus { border-color: var(--green); background: rgba(42,173,92,0.08); }
+
+.select option { background: #1a3d22; color: var(--white); }
+
+.textarea {
+  width: 100%;
+  padding: 12px 14px;
+  background: rgba(255,255,255,0.06);
+  border: 1.5px solid rgba(255,255,255,0.1);
+  border-radius: 14px;
+  font-family: var(--h);
+  font-size: .88rem;
+  color: var(--white);
+  outline: none;
+  resize: none;
+  min-height: 80px;
+  transition: border-color 0.2s;
+}
+
+.textarea::placeholder { color: rgba(240,253,244,0.3); }
+.textarea:focus { border-color: var(--green); }
+
+/* ── BUTTONS ── */
+.btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 15px 24px;
+  border-radius: 16px;
+  font-family: var(--h);
+  font-size: .95rem;
+  font-weight: 700;
+  cursor: pointer;
+  border: none;
+  transition: all 0.15s;
+  width: 100%;
+  letter-spacing: -0.01em;
+}
+
+.btn:active { transform: scale(0.97); }
+
+.btn-primary {
+  background: linear-gradient(135deg, var(--green), var(--green-light));
+  color: var(--white);
+  box-shadow: 0 8px 25px rgba(42,173,92,0.3);
+}
+
+.btn-primary:hover { box-shadow: 0 12px 35px rgba(42,173,92,0.4); }
+
+.btn-lime {
+  background: var(--lime);
+  color: var(--black);
+  box-shadow: 0 8px 25px rgba(168,255,62,0.25);
+}
+
+.btn-outline {
+  background: transparent;
+  border: 1.5px solid var(--card-border);
+  color: var(--white);
+}
+
+.btn-danger {
+  background: rgba(255,92,92,0.15);
+  border: 1px solid rgba(255,92,92,0.3);
+  color: var(--danger);
+}
+
+.btn-sm {
+  padding: 9px 16px;
+  font-size: .8rem;
+  border-radius: 11px;
+  width: auto;
+}
+
+.btn-icon {
+  width: 42px; height: 42px;
+  padding: 0;
+  border-radius: 13px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  color: var(--white);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.1rem;
+  transition: all 0.15s;
+}
+
+.btn-icon:active { transform: scale(0.93); background: var(--mid); }
+
+/* ── ALERTS ── */
+.alert {
+  padding: 12px 14px;
+  border-radius: 14px;
+  font-size: .84rem;
+  font-weight: 500;
+  margin-bottom: 14px;
+  display: flex; align-items: center; gap: 8px;
+  border: 1px solid;
+}
+
+.alert-err { background: rgba(255,92,92,0.1); border-color: rgba(255,92,92,0.25); color: #ff9b9b; }
+.alert-ok { background: rgba(42,173,92,0.1); border-color: rgba(42,173,92,0.25); color: var(--green-light); }
+
+/* ── BADGE ── */
+.badge {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 10px; border-radius: 100px;
+  font-size: .7rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+}
+
+.badge-green { background: rgba(42,173,92,0.15); color: var(--green-light); border: 1px solid rgba(42,173,92,0.2); }
+.badge-yellow { background: rgba(255,208,96,0.12); color: var(--gold); border: 1px solid rgba(255,208,96,0.2); }
+.badge-red { background: rgba(255,92,92,0.12); color: var(--danger); border: 1px solid rgba(255,92,92,0.2); }
+.badge-lime { background: rgba(168,255,62,0.12); color: var(--lime); border: 1px solid rgba(168,255,62,0.2); }
+.badge-gray { background: var(--card); color: var(--muted); border: 1px solid var(--card-border); }
+
+.badge-env { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.2); }
+.badge-soc { background: rgba(96,165,250,0.12); color: #93c5fd; border: 1px solid rgba(96,165,250,0.2); }
+.badge-well { background: rgba(244,114,182,0.12); color: #f9a8d4; border: 1px solid rgba(244,114,182,0.2); }
+.badge-edu { background: rgba(251,191,36,0.12); color: #fcd34d; border: 1px solid rgba(251,191,36,0.2); }
+
+/* ── PROFILE ── */
+.profile-hero {
+  margin: 0;
+  padding: 36px 24px 24px;
+  text-align: center;
+  position: relative;
+}
+
+.profile-avatar {
+  width: 90px; height: 90px;
+  border-radius: 28px;
+  margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 2rem; font-weight: 800;
+  border: 2px solid rgba(168,255,62,0.3);
+  box-shadow: 0 0 30px rgba(168,255,62,0.1);
+}
+
+.profile-name { font-size: 1.5rem; font-weight: 800; letter-spacing: -0.02em; }
+.profile-sub { font-size: .82rem; color: var(--muted); margin-top: 4px; }
+
+.level-bar-wrap {
+  margin: 16px 0 8px;
+}
+
+.level-bar-row {
+  display: flex; justify-content: space-between;
+  font-size: .75rem; margin-bottom: 6px;
+}
+
+.level-bar-bg {
+  height: 6px;
+  background: rgba(255,255,255,0.08);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.level-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, var(--green), var(--lime));
+  border-radius: 3px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.badges-wrap {
+  display: flex; gap: 10px; flex-wrap: wrap; padding: 0 16px 20px;
+}
+
+.badge-item {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 14px;
+  padding: 12px 14px;
+  text-align: center;
+  min-width: 72px;
+}
+
+.badge-item-icon { font-size: 1.6rem; margin-bottom: 4px; }
+.badge-item-label { font-size: .65rem; color: var(--muted); font-weight: 600; }
+
+/* ── ADMIN ── */
+.admin-card {
+  margin: 0 16px 12px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 20px;
+  overflow: hidden;
+}
+
+.admin-card-head {
+  padding: 16px 18px 14px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid var(--card-border);
+}
+
+.admin-card-head h3 { font-size: .95rem; font-weight: 700; }
+
+.proof-item {
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--card-border);
+  display: flex; gap: 12px; align-items: flex-start;
+}
+
+.proof-thumb {
+  width: 60px; height: 60px;
+  border-radius: 12px;
+  overflow: hidden;
+  background: var(--dark2);
+  flex-shrink: 0;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 1.4rem;
+}
+
+.proof-thumb img { width: 100%; height: 100%; object-fit: cover; }
+
+.proof-info { flex: 1; min-width: 0; }
+.proof-name { font-size: .88rem; font-weight: 700; }
+.proof-meta { font-size: .72rem; color: var(--muted); margin-top: 2px; }
+.proof-actions { display: flex; gap: 8px; margin-top: 10px; }
+
+/* ── CHALLENGE SUBMIT ── */
+.challenge-submit {
+  margin: 0 16px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 22px;
+  padding: 20px;
+}
+
+.file-drop {
+  border: 2px dashed rgba(168,255,62,0.25);
+  border-radius: 16px;
+  padding: 32px 20px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s;
+  background: rgba(168,255,62,0.03);
+  position: relative;
+  overflow: hidden;
+}
+
+.file-drop:hover, .file-drop.has-file {
+  border-color: rgba(168,255,62,0.5);
+  background: rgba(168,255,62,0.06);
+}
+
+.file-drop input { position: absolute; inset: 0; opacity: 0; cursor: pointer; }
+.file-drop img { width: 100%; max-height: 200px; object-fit: cover; border-radius: 12px; }
+.file-drop-icon { font-size: 2.5rem; margin-bottom: 10px; }
+.file-drop-text { font-size: .88rem; color: var(--muted); }
+.file-drop-sub { font-size: .75rem; color: rgba(240,253,244,0.35); margin-top: 4px; }
+
+/* ── MODAL ── */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.7);
+  backdrop-filter: blur(6px);
+  z-index: 200;
+  display: flex;
+  align-items: flex-end;
+  padding: 0;
+}
+
+.modal-sheet {
+  background: #111d14;
+  border: 1px solid var(--card-border);
+  border-radius: 28px 28px 0 0;
+  width: 100%;
+  max-width: 430px;
+  margin: 0 auto;
+  padding: 24px 20px max(24px, env(safe-area-inset-bottom));
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-drag {
+  width: 40px; height: 4px;
+  background: rgba(255,255,255,0.15);
+  border-radius: 2px;
+  margin: 0 auto 20px;
+}
+
+.modal-title { font-size: 1.1rem; font-weight: 800; margin-bottom: 16px; }
+
+/* ── EMPTY STATE ── */
+.empty {
+  text-align: center;
+  padding: 50px 24px;
+  color: var(--muted);
+}
+
+.empty-icon { font-size: 3.5rem; margin-bottom: 14px; }
+.empty h3 { font-size: 1rem; color: var(--white); font-weight: 700; margin-bottom: 6px; }
+.empty p { font-size: .85rem; }
+
+/* ── UTILS ── */
+.mt8 { margin-top: 8px; }
+.mt12 { margin-top: 12px; }
+.mt16 { margin-top: 16px; }
+.mt20 { margin-top: 20px; }
+.mb12 { margin-bottom: 12px; }
+.mb16 { margin-bottom: 16px; }
+.mb20 { margin-bottom: 20px; }
+.mb24 { margin-bottom: 24px; }
+.px16 { padding: 0 16px; }
+.py16 { padding: 16px 0; }
+.flex { display: flex; }
+.fc { display: flex; align-items: center; }
+.fcc { display: flex; align-items: center; justify-content: center; }
+.gap6 { gap: 6px; }
+.gap8 { gap: 8px; }
+.gap10 { gap: 10px; }
+.gap12 { gap: 12px; }
+.gap16 { gap: 16px; }
+.fw7 { font-weight: 700; }
+.fw8 { font-weight: 800; }
+.text-sm { font-size: .82rem; }
+.text-xs { font-size: .72rem; }
+.text-muted { color: var(--muted); }
+.text-green { color: var(--green-light); }
+.text-lime { color: var(--lime); }
+.text-right { text-align: right; }
+.text-center { text-align: center; }
+.divider { height: 1px; background: var(--card-border); margin: 16px 0; }
+.spinner { width: 36px; height: 36px; border: 3px solid rgba(255,255,255,0.1); border-top-color: var(--green); border-radius: 50%; animation: spin 0.7s linear infinite; margin: 40px auto; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+.fade-in {
+  animation: fadeIn 0.3s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ── CATEGORY COLORS ── */
+.cat-environment { color: #4ade80; }
+.cat-social { color: #93c5fd; }
+.cat-wellbeing { color: #f9a8d4; }
+.cat-education { color: #fcd34d; }
+
+/* ── CHALLENGE CARDS SCROLL ── */
+.challenges-scroll {
+  display: flex;
+  gap: 12px;
+  padding: 0 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+  margin-bottom: 24px;
+}
+
+.challenges-scroll::-webkit-scrollbar { display: none; }
+
+.challenge-mini-card {
+  flex-shrink: 0;
+  width: 200px;
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  border-radius: 18px;
+  padding: 16px;
+  cursor: pointer;
+  transition: border-color 0.2s;
+}
+
+.challenge-mini-card.active-card { border-color: rgba(168,255,62,0.35); background: rgba(168,255,62,0.04); }
+.challenge-mini-card:active { transform: scale(0.97); }
+
+/* ── TABS ── */
+.tabs {
+  display: flex;
+  background: rgba(255,255,255,0.05);
+  border-radius: 14px;
+  padding: 4px;
+  margin: 0 16px 20px;
+}
+
+.tab {
+  flex: 1;
+  padding: 9px;
+  border: none;
+  background: none;
+  cursor: pointer;
+  font-family: var(--h);
+  font-size: .8rem;
+  font-weight: 600;
+  border-radius: 11px;
+  color: var(--muted);
+  transition: all 0.2s;
+}
+
+.tab.active {
+  background: var(--green);
+  color: var(--white);
+  box-shadow: 0 4px 12px rgba(42,173,92,0.25);
+}
+
+/* ── NOTIFICATION DOT ── */
+.notif-dot {
+  position: absolute;
+  top: 6px; right: 8px;
+  width: 8px; height: 8px;
+  background: var(--danger);
+  border-radius: 50%;
+  border: 2px solid var(--black);
+}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const { useState, useEffect, useContext, createContext, useRef, useCallback } = React;
+
+// ════════════════════════════════════════
+//  DATABASE (localStorage)
+// ════════════════════════════════════════
+const genId = () => Math.random().toString(36).substr(2,9) + Date.now().toString(36);
+const K = { users:'gcv2_users', challenges:'gcv2_challenges', proofs:'gcv2_proofs', comments:'gcv2_comments', cu:'gcv2_cu' };
+
+const AVATAR_COLORS = ['green','lime','gold','blue','pink'];
+
+const initDB = () => {
+  if (!localStorage.getItem(K.users)) {
+    localStorage.setItem(K.users, JSON.stringify([{
+      id:'admin_001', email:'calvin.nevesp@gmail.com', full_name:'Calvin Neves',
+      role:'admin', student_class:null, password:'admin123',
+      total_points: 0, avatar_color: 'lime'
+    }]));
+  }
+  if (!localStorage.getItem(K.challenges)) {
+    const today = new Date().toISOString().split('T')[0];
+    const tomorrow = new Date(Date.now()+86400000).toISOString().split('T')[0];
+    localStorage.setItem(K.challenges, JSON.stringify([
+      { id:'ch001', title:'Ramasse 2 déchets dans ta rue', description:'Prends le temps de ramasser au moins 2 déchets ou papiers que tu trouves autour de ton école ou dans ta rue. Prends une photo comme preuve de ton geste !', category:'environment', scheduled_date: today, status:'active', points_base:40, created_date: new Date().toISOString() },
+      { id:'ch002', title:'Dis bonjour à un inconnu', description:'Fais un geste social positif en saluant quelqu\'un que tu ne connais pas encore dans ton école. Ça ne coûte rien et ça peut tout changer !', category:'social', scheduled_date: tomorrow, status:'scheduled', points_base:20, created_date: new Date().toISOString() },
+      { id:'ch003', title:'5 minutes de méditation', description:'Prends 5 minutes pour toi. Ferme les yeux, respire profondément et recentre-toi. Ton bien-être est aussi important que tes études !', category:'wellbeing', scheduled_date: tomorrow, status:'scheduled', points_base:30, created_date: new Date().toISOString() },
+    ]));
+  }
+  if (!localStorage.getItem(K.proofs)) localStorage.setItem(K.proofs, JSON.stringify([]));
+  if (!localStorage.getItem(K.comments)) localStorage.setItem(K.comments, JSON.stringify([]));
+};
+initDB();
+
+const db = {
+  getUsers: () => JSON.parse(localStorage.getItem(K.users)||'[]'),
+  saveUsers: u => localStorage.setItem(K.users, JSON.stringify(u)),
+  getUserByEmail: e => db.getUsers().find(u=>u.email===e),
+  createUser: d => { const us=db.getUsers(); const nu={...d, id:genId(), total_points:0, avatar_color: AVATAR_COLORS[Math.floor(Math.random()*AVATAR_COLORS.length)]}; us.push(nu); db.saveUsers(us); return nu; },
+  updateUser: (id, up) => { const us=db.getUsers(); const i=us.findIndex(u=>u.id===id); if(i!==-1){ us[i]={...us[i],...up}; db.saveUsers(us); return us[i]; } },
+  getCU: () => JSON.parse(localStorage.getItem(K.cu)||'null'),
+  setCU: u => localStorage.setItem(K.cu, JSON.stringify(u)),
+  clearCU: () => localStorage.removeItem(K.cu),
+  login: (email, pw) => { const u=db.getUserByEmail(email); if(u&&u.password===pw){ db.setCU(u); return u; } return null; },
+  register: d => { if(db.getUserByEmail(d.email)) return null; const u=db.createUser({...d, role:'user'}); db.setCU(u); return u; },
+  getChallenges: () => JSON.parse(localStorage.getItem(K.challenges)||'[]'),
+  saveChallenges: c => localStorage.setItem(K.challenges, JSON.stringify(c)),
+  getChallengeById: id => db.getChallenges().find(c=>c.id===id),
+  createChallenge: d => { const cs=db.getChallenges(); const nc={...d, id:genId(), created_date:new Date().toISOString()}; cs.push(nc); db.saveChallenges(cs); return nc; },
+  updateChallenge: (id, up) => { const cs=db.getChallenges(); const i=cs.findIndex(c=>c.id===id); if(i!==-1){ cs[i]={...cs[i],...up}; db.saveChallenges(cs); return cs[i]; } },
+  deleteChallenge: id => db.saveChallenges(db.getChallenges().filter(c=>c.id!==id)),
+  getActiveChallenge: () => { const today=new Date().toISOString().split('T')[0]; return db.getChallenges().find(c=>c.scheduled_date===today&&(c.status==='active'||c.status==='scheduled')) || db.getChallenges().find(c=>c.status==='active'); },
+  getProofs: () => JSON.parse(localStorage.getItem(K.proofs)||'[]'),
+  saveProofs: p => localStorage.setItem(K.proofs, JSON.stringify(p)),
+  getProofsByChallenge: cid => db.getProofs().filter(p=>p.challenge_id===cid),
+  getProofsByStudent: email => db.getProofs().filter(p=>p.student_email===email),
+  createProof: d => { const ps=db.getProofs(); const np={...d, id:genId(), created_date:new Date().toISOString(), status:'pending', likes:0, liked_by:[], points_awarded:0, validation_rank:null}; ps.push(np); db.saveProofs(ps); return np; },
+  updateProof: (id, up) => { const ps=db.getProofs(); const i=ps.findIndex(p=>p.id===id); if(i!==-1){ ps[i]={...ps[i],...up}; db.saveProofs(ps); return ps[i]; } },
+  likeProof: (pid, email) => { const ps=db.getProofs(); const i=ps.findIndex(p=>p.id===pid); if(i!==-1){ const lb=ps[i].liked_by||[]; if(lb.includes(email)){ ps[i].liked_by=lb.filter(e=>e!==email); ps[i].likes=Math.max(0,(ps[i].likes||0)-1); } else { ps[i].liked_by=[...lb,email]; ps[i].likes=(ps[i].likes||0)+1; } db.saveProofs(ps); return ps[i]; } },
+  validateProof: (pid, cid) => { const validated=db.getProofs().filter(p=>p.challenge_id===cid&&p.status==='validated').length; const rank=validated+1; const ch=db.getChallengeById(cid); const base=ch?.points_base||20; const pts = rank===1?base*5:rank===2?base*3:rank===3?base*2:base; const proof=db.updateProof(pid,{status:'validated',validation_rank:rank,points_awarded:pts,validated_at:new Date().toISOString()}); if(proof){ const us=db.getUsers(); const ui=us.findIndex(u=>u.email===proof.student_email); if(ui!==-1){ us[ui].total_points=(us[ui].total_points||0)+pts; db.saveUsers(us); const cu=db.getCU(); if(cu&&cu.email===proof.student_email) db.setCU(us[ui]); } } return proof; },
+  rejectProof: (pid, fb) => db.updateProof(pid,{status:'rejected',rejection_feedback:fb}),
+  getComments: () => JSON.parse(localStorage.getItem(K.comments)||'[]'),
+  getCommentsByProof: pid => db.getComments().filter(c=>c.proof_id===pid),
+  createComment: d => { const cs=db.getComments(); const nc={...d, id:genId(), created_date:new Date().toISOString()}; cs.push(nc); localStorage.setItem(K.comments,JSON.stringify(cs)); return nc; },
+  getLeaderboard: () => db.getUsers().filter(u=>u.role==='user').sort((a,b)=>(b.total_points||0)-(a.total_points||0)),
+  getClassLeaderboard: () => { const byClass={}; db.getUsers().filter(u=>u.role==='user').forEach(u=>{ if(u.student_class){ if(!byClass[u.student_class]) byClass[u.student_class]=0; byClass[u.student_class]+=(u.total_points||0); } }); return Object.entries(byClass).sort((a,b)=>b[1]-a[1]).map(([cls,pts])=>({class:cls,points:pts})); },
+};
+
+// ════════════════════════════════════════
+//  AUTH CONTEXT
+// ════════════════════════════════════════
+const AuthCtx = createContext(null);
+const useAuth = () => useContext(AuthCtx);
+
+function AuthProvider({children}) {
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
+  useEffect(() => { setUser(db.getCU()); setLoading(false); }, []);
+  const login = (e,p) => { const u=db.login(e,p); if(u) setUser(u); return u; };
+  const logout = () => { db.clearCU(); setUser(null); };
+  const register = d => { const u=db.register(d); if(u) setUser(u); return u; };
+  const updateUser = up => { if(user){ const u=db.updateUser(user.id,up); if(u){ setUser(u); db.setCU(u); } return u; } };
+  return <AuthCtx.Provider value={{user,loading,login,logout,register,updateUser}}>{children}</AuthCtx.Provider>;
+}
+
+// ════════════════════════════════════════
+//  HELPERS
+// ════════════════════════════════════════
+const initials = n => n?.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2)||'?';
+const classes = ['Bachelor 1','Bachelor 2','Bachelor 3','Master 1','Master 2','BTS'];
+const CAT = { environment:{label:'Environnement',emoji:'🌿',badge:'badge-env'}, social:{label:'Social',emoji:'🤝',badge:'badge-soc'}, wellbeing:{label:'Bien-être',emoji:'💆',badge:'badge-well'}, education:{label:'Éducation',emoji:'📚',badge:'badge-edu'} };
+const STATUS = { draft:{l:'Brouillon',cls:'badge-gray'}, scheduled:{l:'Planifié',cls:'badge-yellow'}, active:{l:'Actif',cls:'badge-lime'}, completed:{l:'Terminé',cls:'badge-gray'} };
+
+const getLevel = pts => {
+  if(pts>=500) return {label:'Éco-Champion',emoji:'🏆',color:'var(--gold)',next:null};
+  if(pts>=200) return {label:'Or',emoji:'🥇',color:'var(--gold)',next:500};
+  if(pts>=100) return {label:'Argent',emoji:'🥈',color:'var(--silver)',next:200};
+  if(pts>=40)  return {label:'Bronze',emoji:'🥉',color:'var(--bronze)',next:100};
+  return {label:'Débutant',emoji:'🌱',color:'var(--green-light)',next:40};
+};
+
+const timeAgo = d => {
+  const diff = Date.now() - new Date(d).getTime();
+  const m = Math.floor(diff/60000);
+  if(m<1) return "À l'instant";
+  if(m<60) return `Il y a ${m}min`;
+  const h = Math.floor(m/60);
+  if(h<24) return `Il y a ${h}h`;
+  return `Il y a ${Math.floor(h/24)}j`;
+};
+
+// Avatar component
+function Avatar({name, color='green', size=40, className=''}) {
+  const s = {width:size,height:size,borderRadius:size*0.28,fontSize:size*0.32};
+  return <div className={`feed-avatar ${color} ${className}`} style={s}>{initials(name)}</div>;
+}
+
+// ════════════════════════════════════════
+//  AUTH SCREEN
+// ════════════════════════════════════════
+function AuthScreen({onAuth}) {
+  const [mode, setMode] = useState('login');
+  const [err, setErr] = useState('');
+  const [form, setForm] = useState({email:'',password:'',full_name:'',student_class:''});
+  const {login, register} = useAuth();
+
+  const submit = e => {
+    e.preventDefault(); setErr('');
+    if(mode==='login') {
+      const u = login(form.email, form.password);
+      if(u) onAuth(u);
+      else setErr('Email ou mot de passe incorrect.');
+    } else {
+      if(!form.email.includes('@')) { setErr('Email invalide (doit contenir @)'); return; }
+      if(form.password.length<6) { setErr('Mot de passe : min. 6 caractères'); return; }
+      if(!form.student_class) { setErr('Sélectionne ta classe'); return; }
+      const u = register({...form});
+      if(u) onAuth(u);
+      else setErr('Cet email est déjà utilisé.');
+    }
+  };
+
+  return (
+    <div className="auth-screen">
+      <div className="auth-bg">
+        <div className="auth-orb auth-orb-1"/>
+        <div className="auth-orb auth-orb-2"/>
+        <div className="auth-orb auth-orb-3"/>
+      </div>
+      <div className="auth-top">
+        <div className="auth-icon">🌱</div>
+        <h1>Green<br/><span>Challenge</span></h1>
+        <p>Relève des défis quotidiens, gagne des points et fais partie du mouvement vert de ton école.</p>
+        <div className="auth-chips">
+          {['🌍 Éco','🤝 Social','💪 Bien-être','📚 Savoir'].map(c => <span key={c} className="auth-chip">{c}</span>)}
+        </div>
+      </div>
+      <div className="auth-form-wrap">
+        <div className="auth-tabs">
+          <button className={`auth-tab${mode==='login'?' active':''}`} onClick={()=>{setMode('login');setErr('');}}>Connexion</button>
+          <button className={`auth-tab${mode==='register'?' active':''}`} onClick={()=>{setMode('register');setErr('');}}>Inscription</button>
+        </div>
+        {err && <div className="alert alert-err">⚠️ {err}</div>}
+        <form onSubmit={submit}>
+          {mode==='register' && <div className="input-wrap"><label className="input-label">Nom complet</label><input className="input" type="text" required placeholder="Ex: Marie Dupont" value={form.full_name} onChange={e=>setForm({...form,full_name:e.target.value})}/></div>}
+          <div className="input-wrap"><label className="input-label">Email</label><input className="input" type="email" required placeholder="ton@email.com" value={form.email} onChange={e=>setForm({...form,email:e.target.value})}/></div>
+          <div className="input-wrap"><label className="input-label">Mot de passe</label><input className="input" type="password" required placeholder={mode==='register'?'Min. 6 caractères':'••••••••'} value={form.password} onChange={e=>setForm({...form,password:e.target.value})}/></div>
+          {mode==='register' && <div className="input-wrap"><label className="input-label">Ma classe</label><select className="select" required value={form.student_class} onChange={e=>setForm({...form,student_class:e.target.value})}><option value="">Sélectionner ma classe</option>{classes.map(c=><option key={c} value={c}>{c}</option>)}</select></div>}
+          <button type="submit" className={`btn ${mode==='login'?'btn-primary':'btn-lime'}`} style={{marginTop:6}}>{mode==='login'?'Se connecter 🚀':"Rejoindre le défi 🌱"}</button>
+        </form>
+        {mode==='login' && <div style={{marginTop:14,padding:'10px 12px',background:'rgba(255,255,255,0.04)',borderRadius:12,fontSize:'.72rem',color:'rgba(240,253,244,0.4)',textAlign:'center'}}>Admin : calvin.nevesp@gmail.com / admin123</div>}
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  HOME SCREEN
+// ════════════════════════════════════════
+function HomeScreen({navigate}) {
+  const {user} = useAuth();
+  const [challenge, setChallenge] = useState(null);
+  const [myProofs, setMyProofs] = useState([]);
+  const [rank, setRank] = useState('–');
+  const [recentProofs, setRecentProofs] = useState([]);
+
+  useEffect(() => {
+    setChallenge(db.getActiveChallenge());
+    const proofs = db.getProofsByStudent(user.email);
+    setMyProofs(proofs);
+    const lb = db.getLeaderboard();
+    const r = lb.findIndex(u=>u.email===user.email)+1;
+    setRank(r||'–');
+    setRecentProofs(db.getProofs().filter(p=>p.status==='validated').slice(-3).reverse());
+  }, [user]);
+
+  const pts = user.total_points||0;
+  const level = getLevel(pts);
+  const validated = myProofs.filter(p=>p.status==='validated').length;
+  const pending = myProofs.filter(p=>p.status==='pending').length;
+
+  // Unsplash nature images
+  const heroImages = [
+    'https://images.unsplash.com/photo-1470058869958-2a77ade41c02?w=800&q=80',
+    'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80',
+    'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=800&q=80',
+  ];
+
+  return (
+    <div className="screen fade-in">
+      {/* TOP BAR */}
+      <div className="topbar">
+        <div className="topbar-logo">
+          <span className="dot"/>
+          Green Challenge
+        </div>
+        <div className="topbar-right">
+          {pending>0 && <span className="badge badge-yellow">⏳ {pending}</span>}
+          <div className="pts-chip">⭐ {pts}</div>
+          <Avatar name={user.full_name} color={user.avatar_color||'green'} size={34}/>
+        </div>
+      </div>
+
+      {/* GREETING */}
+      <div style={{padding:'20px 16px 0'}}>
+        <p style={{fontSize:'.82rem',color:'var(--muted)',fontWeight:600}}>Bonjour 👋</p>
+        <h2 style={{fontSize:'1.5rem',fontWeight:800,letterSpacing:'-0.02em',marginTop:2}}>{user.full_name?.split(' ')[0]}</h2>
+        <div className="fc gap8 mt8">
+          <span className="badge badge-lime">{level.emoji} {level.label}</span>
+          {rank!=='–' && <span className="badge badge-gray">🏆 #{rank} classement</span>}
+        </div>
+      </div>
+
+      {/* HERO CHALLENGE */}
+      {challenge ? (
+        <div className="hero-section mt16" onClick={()=>navigate('challenge')}>
+          <div className="hero-bg">
+            <img className="hero-bg-img" src={heroImages[0]} alt="" onError={e=>e.target.style.display='none'}/>
+            <div className="hero-gradient"/>
+          </div>
+          <div className="hero-content">
+            <div className="hero-tag">
+              <span className={`cat-${challenge.category}`}>{CAT[challenge.category]?.emoji}</span>
+              Défi du jour
+            </div>
+            <h2 className="hero-title">{challenge.title}</h2>
+            <p className="hero-desc">{challenge.description?.slice(0,90)}...</p>
+            <div className="hero-bottom">
+              <div className="pts-badge">⭐ {challenge.points_base} pts</div>
+              <div className="fc gap8">
+                <span style={{fontSize:'.78rem',color:'rgba(240,253,244,0.6)'}}>Participer →</span>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="hero-section mt16" style={{minHeight:160}}>
+          <div className="hero-content fcc" style={{height:160}}>
+            <div className="text-center">
+              <div style={{fontSize:'2.5rem',marginBottom:8}}>🌙</div>
+              <p style={{color:'var(--muted)',fontSize:'.88rem'}}>Pas de défi actif aujourd'hui</p>
+              <p style={{color:'var(--muted)',fontSize:'.78rem',marginTop:4}}>Reviens demain à 13h !</p>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* STATS */}
+      <div className="section-head mt20">
+        <span className="section-title">Mes stats</span>
+      </div>
+      <div className="stats-row">
+        <div className="stat-item">
+          <div className="stat-emoji">⭐</div>
+          <div className="stat-val green">{pts}</div>
+          <div className="stat-lbl">Points</div>
+        </div>
+        <div className="stat-item">
+          <div className="stat-emoji">✅</div>
+          <div className="stat-val blue">{validated}</div>
+          <div className="stat-lbl">Validés</div>
+        </div>
+        <div className="stat-item">
+          <div className="stat-emoji">🏆</div>
+          <div className="stat-val gold">#{rank}</div>
+          <div className="stat-lbl">Rang</div>
+        </div>
+      </div>
+
+      {/* UPCOMING CHALLENGES */}
+      <div className="section-head">
+        <span className="section-title">Prochains défis</span>
+      </div>
+      <div className="challenges-scroll mb24">
+        {db.getChallenges().filter(c=>c.status==='scheduled'||c.status==='active').map(c => (
+          <div key={c.id} className={`challenge-mini-card${c.status==='active'?' active-card':''}`} onClick={()=>navigate('challenge')}>
+            <div style={{fontSize:'1.6rem',marginBottom:10}}>{CAT[c.category]?.emoji}</div>
+            <div className={`badge ${CAT[c.category]?.badge} mb12`} style={{fontSize:'.65rem'}}>{CAT[c.category]?.label}</div>
+            <p style={{fontSize:'.82rem',fontWeight:700,lineHeight:1.3,marginBottom:8}}>{c.title}</p>
+            <div className="pts-badge" style={{fontSize:'.72rem',padding:'4px 10px'}}>⭐ {c.points_base} pts</div>
+          </div>
+        ))}
+        {db.getChallenges().filter(c=>c.status==='scheduled'||c.status==='active').length===0 && (
+          <div className="challenge-mini-card" style={{width:'100%',textAlign:'center',color:'var(--muted)'}}>
+            <div style={{fontSize:'1.5rem',marginBottom:6}}>📅</div>
+            <p style={{fontSize:'.82rem'}}>Aucun défi planifié</p>
+          </div>
+        )}
+      </div>
+
+      {/* RECENT FEED */}
+      {recentProofs.length > 0 && (
+        <>
+          <div className="section-head">
+            <span className="section-title">Récents dans la communauté</span>
+            <button className="section-link" onClick={()=>navigate('feed')}>Tout voir →</button>
+          </div>
+          {recentProofs.slice(0,2).map(proof => <MiniProofCard key={proof.id} proof={proof} navigate={navigate}/>)}
+        </>
+      )}
+
+      <div style={{height:20}}/>
+    </div>
+  );
+}
+
+function MiniProofCard({proof, navigate}) {
+  const ch = db.getChallengeById(proof.challenge_id);
+  const u = db.getUserByEmail(proof.student_email);
+  return (
+    <div className="feed-card" onClick={()=>navigate('feed')} style={{cursor:'pointer'}}>
+      <div className="feed-header">
+        <Avatar name={proof.student_name} color={u?.avatar_color||'green'} size={38}/>
+        <div style={{flex:1}}>
+          <div className="feed-name">{proof.student_name}</div>
+          <div className="feed-meta">{proof.student_class} · {timeAgo(proof.created_date)}</div>
+        </div>
+        {proof.validation_rank<=3 && <span style={{fontSize:'1.2rem'}}>{['🥇','🥈','🥉'][proof.validation_rank-1]}</span>}
+      </div>
+      {ch && <div className="feed-challenge-tag">{CAT[ch.category]?.emoji} {ch.title?.slice(0,30)}{ch.title?.length>30?'...':''}</div>}
+      {proof.file_url && (
+        <div className="feed-img-wrap" style={{height:140}}>
+          <img src={proof.file_url} alt="preuve"/>
+        </div>
+      )}
+      <div className="feed-actions">
+        <span className="action-btn">❤️ {proof.likes||0}</span>
+        <span className="feed-pts">+{proof.points_awarded} pts</span>
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  CHALLENGE SCREEN
+// ════════════════════════════════════════
+function ChallengeScreen({navigate}) {
+  const {user} = useAuth();
+  const [challenge, setChallenge] = useState(null);
+  const [myProof, setMyProof] = useState(null);
+  const [proofs, setProofs] = useState([]);
+  const [file, setFile] = useState(null);
+  const [preview, setPreview] = useState(null);
+  const [comment, setComment] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [err, setErr] = useState('');
+
+  const load = () => {
+    const c = db.getActiveChallenge();
+    setChallenge(c);
+    if(c) {
+      const all = db.getProofsByChallenge(c.id);
+      setProofs(all);
+      setMyProof(all.find(p=>p.student_email===user.email)||null);
+    }
+  };
+  useEffect(load, [user]);
+
+  const handleFile = e => {
+    const f = e.target.files[0];
+    if(!f) return;
+    const r = new FileReader();
+    r.onloadend = () => { setFile(r.result); setPreview(r.result); };
+    r.readAsDataURL(f);
+  };
+
+  const submit = e => {
+    e.preventDefault();
+    if(!file){ setErr('Ajoute une photo !'); return; }
+    setSubmitting(true);
+    setTimeout(() => {
+      db.createProof({challenge_id:challenge.id, student_name:user.full_name, student_email:user.email, student_class:user.student_class, file_url:file, comment});
+      setSuccess(true); setSubmitting(false);
+      load();
+    }, 700);
+  };
+
+  const natureImgs = [
+    'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800&q=80',
+    'https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80',
+  ];
+
+  if(!challenge) return (
+    <div className="screen fade-in">
+      <div className="topbar"><h2 style={{fontWeight:800,fontSize:'1.1rem'}}>Défi du jour</h2></div>
+      <div className="empty"><div className="empty-icon">🌙</div><h3>Pas de défi actif</h3><p>Reviens demain à 13h pour le prochain challenge !</p></div>
+    </div>
+  );
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar">
+        <h2 style={{fontWeight:800,fontSize:'1.1rem'}}>Défi du jour</h2>
+        <span className={`badge ${CAT[challenge.category]?.badge}`}>{CAT[challenge.category]?.emoji} {CAT[challenge.category]?.label}</span>
+      </div>
+
+      {/* Challenge hero */}
+      <div className="hero-section" style={{margin:'16px 16px 0',minHeight:200}}>
+        <div className="hero-bg">
+          <img className="hero-bg-img" src={natureImgs[0]} alt="" onError={e=>e.target.style.display='none'}/>
+          <div className="hero-gradient"/>
+        </div>
+        <div className="hero-content">
+          <div className="hero-tag">🏆 {proofs.filter(p=>p.status==='validated').length} participant(s)</div>
+          <h2 className="hero-title" style={{fontSize:'1.35rem'}}>{challenge.title}</h2>
+          <p className="hero-desc" style={{fontSize:'.82rem'}}>{challenge.description}</p>
+          <div className="fc gap8">
+            <div className="pts-badge" style={{fontSize:'.8rem'}}>⭐ {challenge.points_base} pts</div>
+            <span style={{fontSize:'.75rem',color:'rgba(240,253,244,0.5)'}}>🥇×5 🥈×3 🥉×2</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Submit or my proof */}
+      <div style={{margin:'16px 0'}}>
+        {myProof ? (
+          <div className="challenge-submit">
+            <h3 style={{fontWeight:800,marginBottom:14}}>Ma participation 📸</h3>
+            {success && <div className="alert alert-ok">🎉 Preuve envoyée ! En attente de validation.</div>}
+            {myProof.file_url && <img src={myProof.file_url} alt="" style={{width:'100%',borderRadius:14,maxHeight:220,objectFit:'cover',marginBottom:12}}/>}
+            {myProof.comment && <p style={{fontSize:'.86rem',color:'rgba(240,253,244,0.7)',marginBottom:12}}>{myProof.comment}</p>}
+            <span className={`badge ${myProof.status==='validated'?'badge-green':myProof.status==='rejected'?'badge-red':'badge-yellow'}`}>
+              {myProof.status==='validated'?`✅ Validé — +${myProof.points_awarded} pts (Rang #${myProof.validation_rank})`:myProof.status==='rejected'?'❌ Refusée':'⏳ En attente de validation'}
+            </span>
+            {myProof.rejection_feedback && <div className="alert alert-err mt12">💬 {myProof.rejection_feedback}</div>}
+          </div>
+        ) : (
+          <form className="challenge-submit" onSubmit={submit}>
+            <h3 style={{fontWeight:800,marginBottom:14}}>Soumettre ma preuve 📷</h3>
+            {err && <div className="alert alert-err">{err}</div>}
+            <div className={`file-drop ${preview?'has-file':''}`} onClick={()=>document.getElementById('file-input').click()}>
+              <input id="file-input" type="file" accept="image/*" onChange={handleFile} style={{position:'absolute',inset:0,opacity:0,cursor:'pointer'}}/>
+              {preview ? (
+                <img src={preview} alt="" style={{width:'100%',maxHeight:200,objectFit:'cover',borderRadius:12}}/>
+              ) : (
+                <>
+                  <div className="file-drop-icon">📸</div>
+                  <p className="file-drop-text">Appuie pour ajouter une photo</p>
+                  <p className="file-drop-sub">JPG, PNG, HEIC...</p>
+                </>
+              )}
+            </div>
+            <div className="input-wrap mt12">
+              <label className="input-label">Commentaire (optionnel)</label>
+              <textarea className="textarea" placeholder="Décris ton action..." value={comment} onChange={e=>setComment(e.target.value)}/>
+            </div>
+            <div style={{background:'rgba(168,255,62,0.05)',border:'1px solid rgba(168,255,62,0.15)',borderRadius:12,padding:'10px 14px',marginBottom:14,fontSize:'.78rem',color:'rgba(240,253,244,0.6)'}}>
+              Soumis en tant que <strong style={{color:'var(--lime)'}}>{user.full_name}</strong> · {user.student_class}
+            </div>
+            <button type="submit" className="btn btn-primary" disabled={submitting}>
+              {submitting ? '⏳ Envoi...' : '📤 Soumettre ma preuve'}
+            </button>
+          </form>
+        )}
+      </div>
+
+      {/* Validated proofs */}
+      {proofs.filter(p=>p.status==='validated').length > 0 && (
+        <>
+          <div className="section-head"><span className="section-title">Classement du défi</span></div>
+          <div className="admin-card" style={{margin:'0 16px 20px'}}>
+            {proofs.filter(p=>p.status==='validated').sort((a,b)=>a.validation_rank-b.validation_rank).map(p => {
+              const u = db.getUserByEmail(p.student_email);
+              return (
+                <div key={p.id} className="lb-item">
+                  <div className={`lb-rank ${p.validation_rank===1?'r1':p.validation_rank===2?'r2':p.validation_rank===3?'r3':'other'}`}>
+                    {p.validation_rank<=3?['🥇','🥈','🥉'][p.validation_rank-1]:`#${p.validation_rank}`}
+                  </div>
+                  <Avatar name={p.student_name} color={u?.avatar_color||'green'} size={36}/>
+                  <div className="lb-info">
+                    <div className="lb-name">{p.student_name}</div>
+                    <div className="lb-sub">{p.student_class}</div>
+                  </div>
+                  <div className="text-right">
+                    <div className="lb-pts">+{p.points_awarded}</div>
+                    <div className="lb-pts-lbl">points</div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  FEED SCREEN
+// ════════════════════════════════════════
+function FeedScreen() {
+  const {user} = useAuth();
+  const [proofs, setProofs] = useState([]);
+  const [comments, setComments] = useState({});
+  const [newComment, setNewComment] = useState({});
+  const [showComments, setShowComments] = useState({});
+
+  const load = () => {
+    const all = db.getProofs().filter(p=>p.status==='validated').sort((a,b)=>new Date(b.created_date)-new Date(a.created_date));
+    setProofs(all);
+    const c = {};
+    all.forEach(p => { c[p.id] = db.getCommentsByProof(p.id); });
+    setComments(c);
+  };
+  useEffect(load, []);
+
+  const handleLike = pid => { db.likeProof(pid, user.email); load(); };
+  const handleComment = pid => {
+    const t = newComment[pid];
+    if(!t?.trim()) return;
+    db.createComment({proof_id:pid, author_id:user.id, author_name:user.full_name, content:t});
+    setNewComment({...newComment,[pid]:''});
+    setComments({...comments,[pid]:db.getCommentsByProof(pid)});
+  };
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar">
+        <h2 style={{fontWeight:800,fontSize:'1.1rem'}}>Feed</h2>
+        <span className="badge badge-green">🌱 {proofs.length} actions</span>
+      </div>
+
+      {proofs.length===0 ? (
+        <div className="empty mt20"><div className="empty-icon">🌿</div><h3>Pas encore de preuves</h3><p>Sois le premier à participer et inspirer la communauté !</p></div>
+      ) : proofs.map(proof => {
+        const ch = db.getChallengeById(proof.challenge_id);
+        const u = db.getUserByEmail(proof.student_email);
+        const liked = proof.liked_by?.includes(user.email);
+        const proofComments = comments[proof.id]||[];
+        const showing = showComments[proof.id];
+
+        return (
+          <div key={proof.id} className="feed-card">
+            <div className="feed-header">
+              <Avatar name={proof.student_name} color={u?.avatar_color||'green'} size={40}/>
+              <div style={{flex:1}}>
+                <div className="feed-name">{proof.student_name}</div>
+                <div className="feed-meta">{proof.student_class} · {timeAgo(proof.created_date)}</div>
+              </div>
+              {proof.validation_rank<=3 && <span style={{fontSize:'1.4rem'}}>{['🥇','🥈','🥉'][proof.validation_rank-1]}</span>}
+            </div>
+
+            {ch && <div className="feed-challenge-tag">{CAT[ch.category]?.emoji} {ch.title}</div>}
+
+            <div className="feed-img-wrap">
+              {proof.file_url ? (
+                <img src={proof.file_url} alt="preuve"/>
+              ) : (
+                <div className="feed-img-placeholder">
+                  <span>📸</span>
+                  <p>Aucune image</p>
+                </div>
+              )}
+            </div>
+
+            {proof.comment && <div className="feed-caption">{proof.comment}</div>}
+
+            <div className="feed-actions">
+              <button className={`action-btn${liked?' liked':''}`} onClick={()=>handleLike(proof.id)}>
+                {liked?'❤️':'🤍'} {proof.likes||0}
+              </button>
+              <button className="action-btn" onClick={()=>setShowComments({...showComments,[proof.id]:!showing})}>
+                💬 {proofComments.length}
+              </button>
+              <span className="feed-pts">+{proof.points_awarded} pts</span>
+            </div>
+
+            {showing && (
+              <div className="comments-section">
+                {proofComments.map(c => (
+                  <div key={c.id} className="comment-item">
+                    <div className="comment-author">{c.author_name}</div>
+                    <div className="comment-text">{c.content}</div>
+                  </div>
+                ))}
+                <div className="comment-input-row">
+                  <input className="input" style={{flex:1,padding:'10px 12px',fontSize:'.82rem'}} placeholder="Ton commentaire..." value={newComment[proof.id]||''} onChange={e=>setNewComment({...newComment,[proof.id]:e.target.value})} onKeyDown={e=>e.key==='Enter'&&handleComment(proof.id)}/>
+                  <button className="btn btn-primary btn-sm" onClick={()=>handleComment(proof.id)} style={{flexShrink:0,width:'auto'}}>↑</button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+      <div style={{height:8}}/>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  LEADERBOARD SCREEN
+// ════════════════════════════════════════
+function LeaderboardScreen() {
+  const {user} = useAuth();
+  const [tab, setTab] = useState('students');
+  const [students, setStudents] = useState([]);
+  const [classes, setClasses] = useState([]);
+  useEffect(() => { setStudents(db.getLeaderboard()); setClasses(db.getClassLeaderboard()); }, []);
+  const myRank = students.findIndex(u=>u.email===user.email)+1;
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar">
+        <h2 style={{fontWeight:800,fontSize:'1.1rem'}}>🏆 Classement</h2>
+        {myRank>0 && <span className="badge badge-lime">Tu es #{myRank}</span>}
+      </div>
+
+      <div style={{padding:'16px 16px 0'}}>
+        <div style={{background:'linear-gradient(135deg,rgba(168,255,62,0.08),rgba(42,173,92,0.08))',border:'1px solid rgba(168,255,62,0.15)',borderRadius:18,padding:'14px 18px',marginBottom:16}}>
+          <p style={{fontSize:'.75rem',color:'var(--muted)',fontWeight:600,textTransform:'uppercase',letterSpacing:'.04em'}}>Ta position</p>
+          <div className="fc gap12 mt8">
+            <div style={{fontSize:'2rem',fontWeight:800,color:'var(--lime)'}}>#{myRank||'–'}</div>
+            <div>
+              <div style={{fontWeight:700}}>{user.full_name}</div>
+              <div style={{fontSize:'.75rem',color:'var(--muted)'}}>{user.total_points||0} points · {user.student_class}</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="tabs">
+        <button className={`tab${tab==='students'?' active':''}`} onClick={()=>setTab('students')}>👤 Étudiants</button>
+        <button className={`tab${tab==='classes'?' active':''}`} onClick={()=>setTab('classes')}>🏫 Classes</button>
+      </div>
+
+      <div className="admin-card" style={{margin:'0 16px 20px'}}>
+        {tab==='students' && (students.length===0 ? (
+          <div className="empty" style={{padding:'40px 20px'}}><div className="empty-icon">🌱</div><h3>Aucun étudiant</h3><p>Inscris-toi et sois le premier !</p></div>
+        ) : students.map((s,i) => {
+          const lv = getLevel(s.total_points||0);
+          const isMe = s.email===user.email;
+          return (
+            <div key={s.id} className="lb-item" style={isMe?{background:'rgba(168,255,62,0.04)'}:{}}>
+              <div className={`lb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':'other'}`}>
+                {i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}
+              </div>
+              <Avatar name={s.full_name} color={s.avatar_color||'green'} size={36}/>
+              <div className="lb-info">
+                <div className="lb-name">{s.full_name} {isMe&&<span style={{fontSize:'.65rem',color:'var(--lime)'}}>(moi)</span>}</div>
+                <div className="lb-sub">{s.student_class} · {lv.emoji} {lv.label}</div>
+              </div>
+              <div className="text-right">
+                <div className="lb-pts">{s.total_points||0}</div>
+                <div className="lb-pts-lbl">pts</div>
+              </div>
+            </div>
+          );
+        }))}
+        {tab==='classes' && (classes.length===0 ? (
+          <div className="empty" style={{padding:'40px 20px'}}><div className="empty-icon">🏫</div><h3>Aucune donnée</h3></div>
+        ) : classes.map((c,i) => (
+          <div key={c.class} className="lb-item" style={c.class===user.student_class?{background:'rgba(168,255,62,0.04)'}:{}}>
+            <div className={`lb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':'other'}`}>{i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</div>
+            <div style={{flex:1}}><div className="lb-name">🏫 {c.class}</div></div>
+            <div className="text-right">
+              <div className="lb-pts">{c.points}</div>
+              <div className="lb-pts-lbl">pts</div>
+            </div>
+          </div>
+        )))}
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  PROFILE SCREEN
+// ════════════════════════════════════════
+function ProfileScreen({navigate}) {
+  const {user, logout, updateUser} = useAuth();
+  const [proofs, setProofs] = useState([]);
+  const [editing, setEditing] = useState(false);
+  const [form, setForm] = useState({full_name:user.full_name||'',student_class:user.student_class||''});
+  const [saved, setSaved] = useState(false);
+
+  useEffect(() => setProofs(db.getProofsByStudent(user.email)), [user]);
+
+  const pts = user.total_points||0;
+  const level = getLevel(pts);
+  const pct = level.next ? Math.min(100,(pts/level.next)*100) : 100;
+  const validated = proofs.filter(p=>p.status==='validated');
+  const badges = [];
+  if(validated.length>=1) badges.push({e:'🌱',l:'1er défi'});
+  if(validated.length>=5) badges.push({e:'🌿',l:'5 défis'});
+  if(validated.length>=10) badges.push({e:'🌳',l:'10 défis'});
+  if(pts>=100) badges.push({e:'⭐',l:'100 pts'});
+  if(pts>=500) badges.push({e:'🏆',l:'Champion'});
+
+  const save = () => { updateUser(form); setEditing(false); setSaved(true); setTimeout(()=>setSaved(false),2000); };
+
+  const profileImgs = ['https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80'];
+
+  return (
+    <div className="screen fade-in">
+      <div className="topbar">
+        <h2 style={{fontWeight:800,fontSize:'1.1rem'}}>Mon Profil</h2>
+        <div className="fc gap8">
+          <button className="btn-icon" onClick={()=>setEditing(!editing)} style={{fontSize:'.9rem'}}>✏️</button>
+          <button className="btn-icon" onClick={()=>{logout();}} style={{fontSize:'.9rem'}}>🚪</button>
+        </div>
+      </div>
+
+      {/* Profile hero */}
+      <div style={{position:'relative',height:120,overflow:'hidden',marginBottom:-50}}>
+        <img src={profileImgs[0]} alt="" style={{width:'100%',height:'100%',objectFit:'cover',opacity:.3}} onError={e=>e.target.style.display='none'}/>
+        <div style={{position:'absolute',inset:0,background:'linear-gradient(to bottom, transparent, var(--black))'}}/>
+      </div>
+
+      <div className="profile-hero">
+        {editing ? (
+          <>
+            {saved && <div className="alert alert-ok mb12">✅ Profil mis à jour !</div>}
+            <div className="input-wrap"><label className="input-label">Nom complet</label><input className="input" value={form.full_name} onChange={e=>setForm({...form,full_name:e.target.value})}/></div>
+            <div className="input-wrap"><label className="input-label">Classe</label><select className="select" value={form.student_class} onChange={e=>setForm({...form,student_class:e.target.value})}><option value="">–</option>{classes.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+            <div className="fc gap8 mt8">
+              <button className="btn btn-primary" style={{flex:1}} onClick={save}>💾 Enregistrer</button>
+              <button className="btn btn-outline" style={{flex:1}} onClick={()=>setEditing(false)}>Annuler</button>
+            </div>
+          </>
+        ) : (
+          <>
+            <div className={`profile-avatar feed-avatar ${user.avatar_color||'green'}`}>
+              {initials(user.full_name)}
+            </div>
+            <h2 className="profile-name">{user.full_name}</h2>
+            <p className="profile-sub">{user.email}</p>
+            <div className="fc gap8 mt8" style={{justifyContent:'center'}}>
+              <span className="badge badge-lime">{user.student_class||'–'}</span>
+              <span className="badge badge-green">{level.emoji} {level.label}</span>
+            </div>
+            <div className="level-bar-wrap mt16" style={{padding:'0 20px'}}>
+              <div className="level-bar-row">
+                <span style={{fontWeight:700,color:'var(--lime)'}}>{pts} pts</span>
+                {level.next && <span style={{color:'var(--muted)',fontSize:'.72rem'}}>→ {level.next} pts</span>}
+              </div>
+              <div className="level-bar-bg">
+                <div className="level-bar-fill" style={{width:`${pct}%`}}/>
+              </div>
+            </div>
+          </>
+        )}
+      </div>
+
+      {/* Stats */}
+      <div className="stats-row" style={{margin:'0 16px 20px',gridTemplateColumns:'repeat(4,1fr)',gap:8}}>
+        {[{e:'⭐',v:pts,l:'Points'},{e:'✅',v:validated.length,l:'Validés'},{e:'📸',v:proofs.length,l:'Soumis'},{e:'❤️',v:proofs.reduce((a,p)=>a+(p.likes||0),0),l:'Likes'}].map(s=>(
+          <div key={s.l} className="stat-item" style={{padding:'12px 8px'}}>
+            <div className="stat-emoji" style={{fontSize:'1.1rem'}}>{s.e}</div>
+            <div className="stat-val green" style={{fontSize:'1.1rem'}}>{s.v}</div>
+            <div className="stat-lbl">{s.l}</div>
+          </div>
+        ))}
+      </div>
+
+      {/* Badges */}
+      {badges.length > 0 && (
+        <>
+          <div className="section-head px16"><span className="section-title">🎖️ Badges</span></div>
+          <div className="badges-wrap">
+            {badges.map(b => <div key={b.l} className="badge-item"><div className="badge-item-icon">{b.e}</div><div className="badge-item-label">{b.l}</div></div>)}
+            {[1,2,3].map(i => <div key={`lock${i}`} className="badge-item" style={{opacity:.3}}><div className="badge-item-icon">🔒</div><div className="badge-item-label">???</div></div>)}
+          </div>
+        </>
+      )}
+
+      {/* History */}
+      <div className="section-head px16 mt8"><span className="section-title">Historique</span></div>
+      <div className="admin-card" style={{margin:'0 16px 20px'}}>
+        {proofs.length===0 ? (
+          <div className="empty" style={{padding:'30px 20px'}}><div className="empty-icon" style={{fontSize:'2rem'}}>📭</div><h3>Aucune participation</h3><p>Commence à relever des défis !</p></div>
+        ) : proofs.slice().reverse().map(p => (
+          <div key={p.id} className="lb-item">
+            <span className={`badge ${p.status==='validated'?'badge-green':p.status==='rejected'?'badge-red':'badge-yellow'}`}>
+              {p.status==='validated'?'✅':p.status==='rejected'?'❌':'⏳'}
+            </span>
+            <div className="lb-info"><div className="lb-name" style={{fontSize:'.82rem'}}>{new Date(p.created_date).toLocaleDateString('fr-FR')}</div></div>
+            <div className="text-right"><div className="lb-pts" style={{fontSize:'.88rem'}}>{p.points_awarded||0}</div><div className="lb-pts-lbl">pts</div></div>
+          </div>
+        ))}
+      </div>
+
+      <button className="btn btn-danger" style={{margin:'0 16px 30px',width:'calc(100% - 32px)'}} onClick={logout}>🚪 Se déconnecter</button>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  ADMIN SCREENS
+// ════════════════════════════════════════
+function AdminScreen({tab, navigate}) {
+  return (
+    <div className="screen fade-in">
+      <div className="topbar">
+        <h2 style={{fontWeight:800,fontSize:'1.1rem'}}>Administration</h2>
+        <span className="badge badge-lime">🛡️ Admin</span>
+      </div>
+      <div className="tabs mt16" style={{margin:'16px 16px 20px'}}>
+        {[['dashboard','📊 Dashboard'],['challenges','🏆 Défis'],['proofs','📸 Preuves'],['users','👤 Comptes']].map(([v,l])=>(
+          <button key={v} className={`tab${tab===v?' active':''}`} onClick={()=>navigate(`admin_${v}`)}>{l}</button>
+        ))}
+      </div>
+      {tab==='dashboard' && <AdminDashboard navigate={navigate}/>}
+      {tab==='challenges' && <AdminChallenges/>}
+      {tab==='proofs' && <AdminProofs/>}
+      {tab==='users' && <AdminUsers/>}
+    </div>
+  );
+}
+
+function AdminDashboard({navigate}) {
+  const challenges = db.getChallenges();
+  const proofs = db.getProofs();
+  const users = db.getUsers().filter(u=>u.role==='user');
+  const top = db.getLeaderboard().slice(0,5);
+  const stats = [
+    {e:'🏆',v:challenges.length,l:'Défis'},
+    {e:'👤',v:users.length,l:'Étudiants'},
+    {e:'⏳',v:proofs.filter(p=>p.status==='pending').length,l:'En attente'},
+    {e:'✅',v:proofs.filter(p=>p.status==='validated').length,l:'Validées'},
+    {e:'⭐',v:users.reduce((a,u)=>a+(u.total_points||0),0),l:'Pts total'},
+    {e:'📸',v:proofs.length,l:'Preuves'},
+  ];
+  const pending = proofs.filter(p=>p.status==='pending').length;
+  return (
+    <div>
+      <div className="stats-row" style={{gridTemplateColumns:'repeat(3,1fr)'}}>
+        {stats.map(s=><div key={s.l} className="stat-item"><div className="stat-emoji">{s.e}</div><div className="stat-val green">{s.v}</div><div className="stat-lbl">{s.l}</div></div>)}
+      </div>
+      {pending > 0 && (
+        <div style={{margin:'0 16px 16px'}} onClick={()=>navigate('admin_proofs')}>
+          <div style={{background:'rgba(255,208,96,0.08)',border:'1px solid rgba(255,208,96,0.2)',borderRadius:18,padding:'16px 18px',cursor:'pointer',display:'flex',alignItems:'center',gap:14}}>
+            <span style={{fontSize:'2rem'}}>⏳</span>
+            <div style={{flex:1}}>
+              <div style={{fontWeight:700}}>{pending} preuve{pending>1?'s':''} à valider</div>
+              <div style={{fontSize:'.78rem',color:'var(--muted)',marginTop:2}}>Appuie pour valider →</div>
+            </div>
+          </div>
+        </div>
+      )}
+      {top.length > 0 && (
+        <>
+          <div className="section-head px16"><span className="section-title">Top étudiants</span></div>
+          <div className="admin-card" style={{margin:'0 16px 20px'}}>
+            {top.map((s,i)=>(
+              <div key={s.id} className="lb-item">
+                <div className={`lb-rank ${i===0?'r1':i===1?'r2':i===2?'r3':'other'}`}>{i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</div>
+                <Avatar name={s.full_name} color={s.avatar_color||'green'} size={34}/>
+                <div className="lb-info"><div className="lb-name">{s.full_name}</div><div className="lb-sub">{s.student_class}</div></div>
+                <div className="lb-pts">{s.total_points||0}</div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+    </div>
+  );
+}
+
+const EMPTY_C = {title:'',description:'',category:'environment',scheduled_date:'',points_base:20,status:'draft'};
+function AdminChallenges() {
+  const [challenges, setChallenges] = useState([]);
+  const [showModal, setShowModal] = useState(false);
+  const [form, setForm] = useState(EMPTY_C);
+  const [editing, setEditing] = useState(null);
+  const reload = () => setChallenges(db.getChallenges().sort((a,b)=>new Date(b.scheduled_date)-new Date(a.scheduled_date)));
+  useEffect(reload, []);
+  const submit = e => { e.preventDefault(); if(editing) db.updateChallenge(editing,form); else db.createChallenge(form); reload(); setShowModal(false); setForm(EMPTY_C); setEditing(null); };
+  const edit = c => { setForm({title:c.title,description:c.description,category:c.category,scheduled_date:c.scheduled_date,points_base:c.points_base,status:c.status}); setEditing(c.id); setShowModal(true); };
+  const del = id => { if(window.confirm('Supprimer ?')){ db.deleteChallenge(id); reload(); } };
+  const activate = id => { db.getChallenges().filter(c=>c.status==='active').forEach(c=>db.updateChallenge(c.id,{status:'scheduled'})); db.updateChallenge(id,{status:'active'}); reload(); };
+  return (
+    <div>
+      <div className="fc" style={{padding:'0 16px',justifyContent:'flex-end',marginBottom:12}}>
+        <button className="btn btn-primary btn-sm" style={{width:'auto'}} onClick={()=>{setForm(EMPTY_C);setEditing(null);setShowModal(true);}}>+ Nouveau défi</button>
+      </div>
+      {challenges.length===0 ? <div className="empty"><div className="empty-icon">🏆</div><h3>Aucun défi</h3></div> :
+        challenges.map(c => (
+          <div key={c.id} className="admin-card">
+            <div style={{padding:'14px 16px'}}>
+              <div className="fc gap8 mb12">
+                <span style={{fontSize:'1.4rem'}}>{CAT[c.category]?.emoji}</span>
+                <div style={{flex:1}}>
+                  <div style={{fontWeight:700,fontSize:'.9rem'}}>{c.title}</div>
+                  <div style={{fontSize:'.72rem',color:'var(--muted)',marginTop:2}}>{new Date(c.scheduled_date).toLocaleDateString('fr-FR')} · {c.points_base} pts</div>
+                </div>
+                <span className={`badge ${STATUS[c.status]?.cls}`}>{STATUS[c.status]?.l}</span>
+              </div>
+              <div className="fc gap8">
+                {c.status!=='active'&&<button className="btn btn-primary btn-sm" onClick={()=>activate(c.id)}>▶ Activer</button>}
+                <button className="btn btn-outline btn-sm" onClick={()=>edit(c)}>✏️</button>
+                <button className="btn btn-danger btn-sm" onClick={()=>del(c.id)}>🗑️</button>
+              </div>
+            </div>
+          </div>
+        ))
+      }
+      {showModal && (
+        <div className="modal-backdrop" onClick={()=>setShowModal(false)}>
+          <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+            <div className="modal-drag"/>
+            <div className="modal-title">{editing?'Modifier':'Nouveau défi'}</div>
+            <form onSubmit={submit}>
+              <div className="input-wrap"><label className="input-label">Titre *</label><input className="input" required value={form.title} onChange={e=>setForm({...form,title:e.target.value})} placeholder="Ramasse 3 déchets..."/></div>
+              <div className="input-wrap"><label className="input-label">Description *</label><textarea className="textarea" required value={form.description} onChange={e=>setForm({...form,description:e.target.value})} placeholder="Décris le défi..."/></div>
+              <div className="input-wrap"><label className="input-label">Catégorie</label><select className="select" value={form.category} onChange={e=>setForm({...form,category:e.target.value})}>{Object.entries(CAT).map(([k,v])=><option key={k} value={k}>{v.emoji} {v.label}</option>)}</select></div>
+              <div className="input-wrap"><label className="input-label">Date *</label><input className="input" type="date" required value={form.scheduled_date} onChange={e=>setForm({...form,scheduled_date:e.target.value})}/></div>
+              <div className="input-wrap"><label className="input-label">Points de base</label><input className="input" type="number" min="5" value={form.points_base} onChange={e=>setForm({...form,points_base:parseInt(e.target.value)})}/></div>
+              <div className="input-wrap"><label className="input-label">Statut</label><select className="select" value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>{Object.entries(STATUS).map(([k,v])=><option key={k} value={k}>{v.l}</option>)}</select></div>
+              <button type="submit" className="btn btn-primary">{editing?'💾 Enregistrer':'✅ Créer le défi'}</button>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminProofs() {
+  const [proofs, setProofs] = useState([]);
+  const [filter, setFilter] = useState('pending');
+  const [selected, setSelected] = useState(null);
+  const [feedback, setFeedback] = useState('');
+  const load = () => setProofs(db.getProofs().sort((a,b)=>new Date(b.created_date)-new Date(a.created_date)));
+  useEffect(load,[]);
+  const filtered = proofs.filter(p=>filter==='all'?true:p.status===filter);
+  return (
+    <div>
+      <div className="tabs" style={{margin:'0 16px 16px'}}>
+        {[['pending','⏳ En attente'],['validated','✅ Validées'],['all','📋 Toutes']].map(([v,l])=>(
+          <button key={v} className={`tab${filter===v?' active':''}`} onClick={()=>setFilter(v)}>{l}</button>
+        ))}
+      </div>
+      {filtered.length===0 ? <div className="empty"><div className="empty-icon">📭</div><h3>Aucune preuve</h3></div> :
+        filtered.map(proof => {
+          const ch = db.getChallengeById(proof.challenge_id);
+          return (
+            <div key={proof.id} className="admin-card">
+              <div className="proof-item">
+                <div className="proof-thumb">
+                  {proof.file_url ? <img src={proof.file_url} alt=""/> : '📷'}
+                </div>
+                <div className="proof-info">
+                  <div className="proof-name">{proof.student_name}</div>
+                  <div className="proof-meta">{proof.student_class} · {timeAgo(proof.created_date)}</div>
+                  {ch ? <div style={{fontSize:'.72rem',color:'var(--green-light)',marginTop:4}}>🏆 {ch.title}</div> : <div style={{fontSize:'.72rem',color:'var(--danger)',marginTop:4}}>⚠️ Défi supprimé</div>}
+                  {proof.status==='validated' && <div style={{fontSize:'.75rem',color:'var(--lime)',fontWeight:700,marginTop:4}}>✅ +{proof.points_awarded} pts · #{proof.validation_rank}</div>}
+                  {proof.status==='pending' && ch && (
+                    <div className="proof-actions">
+                      <button className="btn btn-primary btn-sm" onClick={()=>{db.validateProof(proof.id,proof.challenge_id);load();}}>✅ Valider</button>
+                      <button className="btn btn-danger btn-sm" onClick={()=>{setSelected(proof);setFeedback('');}}>❌ Refuser</button>
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          );
+        })
+      }
+      {selected && (
+        <div className="modal-backdrop" onClick={()=>setSelected(null)}>
+          <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+            <div className="modal-drag"/>
+            <div className="modal-title">Refuser la preuve</div>
+            <p style={{fontSize:'.86rem',color:'var(--muted)',marginBottom:14}}>Preuve de <strong style={{color:'var(--white)'}}>{selected.student_name}</strong></p>
+            <div className="input-wrap"><label className="input-label">Feedback (optionnel)</label><textarea className="textarea" placeholder="Pourquoi ce refus ?" value={feedback} onChange={e=>setFeedback(e.target.value)}/></div>
+            <div className="fc gap8">
+              <button className="btn btn-outline" style={{flex:1}} onClick={()=>setSelected(null)}>Annuler</button>
+              <button className="btn btn-danger" style={{flex:1}} onClick={()=>{db.rejectProof(selected.id,feedback);load();setSelected(null);}}>❌ Confirmer</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminUsers() {
+  const [users, setUsers] = useState([]);
+  const load = () => setUsers(db.getUsers());
+  useEffect(load,[]);
+  return (
+    <div>
+      <div className="fc gap8 px16" style={{marginBottom:12}}>
+        <span className="badge badge-green">👤 {users.filter(u=>u.role==='user').length} étudiants</span>
+        <span className="badge badge-lime">🛡️ {users.filter(u=>u.role==='admin').length} admins</span>
+      </div>
+      <div className="admin-card" style={{margin:'0 16px 20px'}}>
+        {users.map(u => (
+          <div key={u.id} className="lb-item">
+            <Avatar name={u.full_name} color={u.avatar_color||'green'} size={36}/>
+            <div className="lb-info">
+              <div className="lb-name">{u.full_name||'–'}</div>
+              <div className="lb-sub">{u.email} · {u.student_class||u.role}</div>
+            </div>
+            <div className="fc gap6">
+              <span className={`badge ${u.disabled?'badge-red':'badge-green'}`}>{u.disabled?'🔴':'🟢'}</span>
+              <select style={{background:'var(--card)',border:'1px solid var(--card-border)',color:'var(--white)',borderRadius:8,padding:'4px 6px',fontSize:'.72rem',fontFamily:'var(--h)',cursor:'pointer'}} value={u.role} onChange={e=>{db.updateUser(u.id,{role:e.target.value});load();}}>
+                <option value="user">Étudiant</option>
+                <option value="admin">Admin</option>
+              </select>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ════════════════════════════════════════
+//  MAIN APP
+// ════════════════════════════════════════
+function App() {
+  const {user, loading} = useAuth();
+  const [page, setPage] = useState('home');
+
+  if(loading) return <div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',background:'var(--black)'}}><div className="spinner"/></div>;
+
+  if(!user) return <AuthScreen onAuth={()=>setPage('home')}/>;
+
+  const isAdmin = user.role === 'admin';
+  const navigate = p => setPage(p);
+
+  const navItems = isAdmin ? [
+    {id:'admin_dashboard',icon:'📊',label:'Dashboard'},
+    {id:'admin_challenges',icon:'🏆',label:'Défis'},
+    {id:'admin_proofs',icon:'📸',label:'Preuves'},
+    {id:'admin_users',icon:'👤',label:'Comptes'},
+    {id:'leaderboard',icon:'🥇',label:'Ranking'},
+  ] : [
+    {id:'home',icon:'🏠',label:'Accueil'},
+    {id:'challenge',icon:'🎯',label:'Défi'},
+    {id:'feed',icon:'📱',label:'Feed'},
+    {id:'leaderboard',icon:'🏆',label:'Classement'},
+    {id:'profile',icon:'👤',label:'Profil'},
+  ];
+
+  const hasPending = db.getProofs().filter(p=>p.status==='pending').length > 0;
+
+  const renderPage = () => {
+    if(page==='home') return <HomeScreen navigate={navigate}/>;
+    if(page==='challenge') return <ChallengeScreen navigate={navigate}/>;
+    if(page==='feed') return <FeedScreen/>;
+    if(page==='leaderboard') return <LeaderboardScreen/>;
+    if(page==='profile') return <ProfileScreen navigate={navigate}/>;
+    if(page.startsWith('admin')) {
+      const tab = page.replace('admin_','') || 'dashboard';
+      return <AdminScreen tab={tab} navigate={navigate}/>;
+    }
+    return <HomeScreen navigate={navigate}/>;
+  };
+
+  return (
+    <div id="app">
+      {renderPage()}
+      <nav className="bottom-nav">
+        {navItems.map(item => (
+          <button key={item.id} className={`nav-btn${page===item.id||page.startsWith(item.id)?' active':''}`} onClick={()=>navigate(item.id)}>
+            <div className="nav-icon">
+              {item.icon}
+              {item.id==='admin_proofs' && hasPending && <span className="notif-dot"/>}
+            </div>
+            <span className="nav-label">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <AuthProvider><App/></AuthProvider>
+);
+</script>
+</body>
+</html>
