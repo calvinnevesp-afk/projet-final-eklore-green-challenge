@@ -1,0 +1,1317 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="theme-color" content="#ffffff"/>
+<title>🌱 Green Challenge</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+:root{
+  --green:#16a34a;--green2:#22c55e;--green3:#4ade80;--greenl:#f0fdf4;--greenbg:#dcfce7;
+  --lime:#84cc16;--limel:#f7fee7;
+  --white:#ffffff;--bg:#f8fafc;--bg2:#f1f5f9;
+  --border:#e2e8f0;--border2:#cbd5e1;
+  --text:#0f172a;--text2:#475569;--text3:#94a3b8;
+  --red:#ef4444;--redl:#fef2f2;
+  --gold:#f59e0b;--goldl:#fffbeb;
+  --blue:#3b82f6;--bluel:#eff6ff;
+  --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  --shadow2:0 4px 16px rgba(0,0,0,.08);
+  --shadow3:0 8px 32px rgba(0,0,0,.12);
+  --r:12px;--r2:18px;--r3:24px;
+  --font:'Nunito',sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;background:var(--bg);font-family:var(--font);color:var(--text);}
+::-webkit-scrollbar{width:0;}
+#root{height:100%;}
+.app{max-width:430px;margin:0 auto;min-height:100vh;min-height:100dvh;background:var(--white);display:flex;flex-direction:column;position:relative;box-shadow:0 0 40px rgba(0,0,0,.06);}
+.screen{flex:1;overflow-y:auto;padding-bottom:76px;}
+/* TOPBAR */
+.topbar{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(16px);border-bottom:1px solid var(--border);padding:12px 16px;display:flex;align-items:center;justify-content:space-between;}
+.topbar-logo{font-size:1.1rem;font-weight:900;color:var(--green);display:flex;align-items:center;gap:6px;}
+.topbar-logo .live-dot{width:7px;height:7px;background:var(--green2);border-radius:50%;animation:blink 2s infinite;}
+@keyframes blink{0%,100%{opacity:1;}50%{opacity:.3;}}
+/* BOTTOM NAV */
+.bnav{position:fixed;bottom:0;left:50%;transform:translateX(-50%);width:100%;max-width:430px;z-index:100;background:rgba(255,255,255,.96);backdrop-filter:blur(20px);border-top:1px solid var(--border);padding:8px 0 max(8px,env(safe-area-inset-bottom));display:flex;justify-content:space-around;}
+.bnav-btn{display:flex;flex-direction:column;align-items:center;gap:3px;padding:5px 12px;border:none;background:none;cursor:pointer;color:var(--text3);transition:color .2s;position:relative;}
+.bnav-btn.active{color:var(--green);}
+.bnav-icon{font-size:1.3rem;width:40px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:10px;transition:background .2s;}
+.bnav-btn.active .bnav-icon{background:var(--greenl);}
+.bnav-label{font-size:.6rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;}
+.notif-badge{position:absolute;top:3px;right:6px;background:var(--red);color:#fff;font-size:.55rem;font-weight:800;min-width:16px;height:16px;border-radius:8px;display:flex;align-items:center;justify-content:center;padding:0 4px;border:2px solid #fff;}
+/* CARDS */
+.card{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);box-shadow:var(--shadow);}
+.card-pad{padding:16px;}
+/* BUTTONS */
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:7px;padding:12px 20px;border-radius:var(--r);font-family:var(--font);font-size:.9rem;font-weight:700;cursor:pointer;border:none;transition:all .15s;width:100%;}
+.btn:active{transform:scale(.97);}
+.btn-green{background:var(--green);color:#fff;box-shadow:0 4px 14px rgba(22,163,74,.3);}
+.btn-green:hover{background:#15803d;}
+.btn-outline{background:var(--white);color:var(--green);border:2px solid var(--green);}
+.btn-red{background:var(--red);color:#fff;}
+.btn-gray{background:var(--bg2);color:var(--text2);border:1px solid var(--border);}
+.btn-sm{padding:7px 14px;font-size:.78rem;width:auto;border-radius:9px;}
+.btn-xs{padding:5px 10px;font-size:.72rem;width:auto;border-radius:7px;}
+/* INPUTS */
+.inp-wrap{margin-bottom:13px;}
+.inp-label{display:block;font-size:.75rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px;}
+.inp,.sel,.ta{width:100%;padding:11px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:var(--r);font-family:var(--font);font-size:.9rem;color:var(--text);outline:none;transition:border-color .2s;}
+.inp:focus,.sel:focus,.ta:focus{border-color:var(--green);background:var(--greenl);}
+.inp::placeholder,.ta::placeholder{color:var(--text3);}
+.ta{resize:none;min-height:80px;}
+.sel option{background:#fff;}
+/* BADGE */
+.badge{display:inline-flex;align-items:center;gap:4px;padding:3px 9px;border-radius:100px;font-size:.68rem;font-weight:800;text-transform:uppercase;letter-spacing:.04em;}
+.badge-green{background:var(--greenbg);color:var(--green);}
+.badge-yellow{background:#fef3c7;color:#92400e;}
+.badge-red{background:var(--redl);color:var(--red);}
+.badge-blue{background:var(--bluel);color:var(--blue);}
+.badge-gray{background:var(--bg2);color:var(--text2);}
+.badge-gold{background:var(--goldl);color:var(--gold);}
+.badge-lime{background:var(--limel);color:var(--lime);}
+/* ALERTS */
+.alert{padding:10px 14px;border-radius:var(--r);font-size:.84rem;font-weight:600;margin-bottom:12px;border:1px solid;}
+.alert-err{background:var(--redl);border-color:#fecaca;color:#991b1b;}
+.alert-ok{background:var(--greenl);border-color:var(--greenbg);color:var(--green);}
+/* AUTH */
+.auth-wrap{min-height:100vh;background:linear-gradient(160deg,#f0fdf4 0%,#dcfce7 40%,#bbf7d0 100%);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;}
+.auth-logo{width:80px;height:80px;background:linear-gradient(135deg,var(--green),var(--green2));border-radius:24px;display:flex;align-items:center;justify-content:center;font-size:2.2rem;margin-bottom:20px;box-shadow:0 12px 30px rgba(22,163,74,.25);}
+.auth-title{font-size:2rem;font-weight:900;color:var(--text);text-align:center;margin-bottom:6px;}
+.auth-sub{font-size:.88rem;color:var(--text2);text-align:center;margin-bottom:28px;line-height:1.5;}
+.auth-box{background:#fff;border-radius:var(--r3);padding:24px;width:100%;max-width:360px;box-shadow:var(--shadow3);border:1px solid var(--border);}
+.tabs{display:flex;background:var(--bg);border-radius:var(--r);padding:3px;margin-bottom:18px;}
+.tab{flex:1;padding:9px;border:none;background:none;cursor:pointer;font-family:var(--font);font-size:.82rem;font-weight:700;border-radius:9px;color:var(--text2);transition:all .2s;}
+.tab.active{background:#fff;color:var(--green);box-shadow:var(--shadow);}
+/* AVATAR */
+.av{border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;flex-shrink:0;}
+.av-green{background:linear-gradient(135deg,#16a34a,#4ade80);color:#fff;}
+.av-blue{background:linear-gradient(135deg,#3b82f6,#60a5fa);color:#fff;}
+.av-purple{background:linear-gradient(135deg,#8b5cf6,#a78bfa);color:#fff;}
+.av-orange{background:linear-gradient(135deg,#f97316,#fb923c);color:#fff;}
+.av-pink{background:linear-gradient(135deg,#ec4899,#f472b6);color:#fff;}
+.av-teal{background:linear-gradient(135deg,#14b8a6,#2dd4bf);color:#fff;}
+/* HERO CHALLENGE */
+.hero-ch{margin:16px;border-radius:var(--r2);overflow:hidden;position:relative;min-height:200px;cursor:pointer;}
+.hero-ch-bg{position:absolute;inset:0;}
+.hero-ch-bg img{width:100%;height:100%;object-fit:cover;}
+.hero-ch-overlay{position:absolute;inset:0;background:linear-gradient(to bottom,rgba(0,0,0,.1) 0%,rgba(0,0,0,.65) 100%);}
+.hero-ch-content{position:relative;z-index:2;padding:20px;height:100%;display:flex;flex-direction:column;justify-content:flex-end;}
+.hero-ch-tag{display:inline-flex;align-items:center;gap:5px;background:rgba(255,255,255,.2);backdrop-filter:blur(8px);border:1px solid rgba(255,255,255,.3);color:#fff;font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:100px;margin-bottom:10px;width:fit-content;}
+.hero-ch-title{font-size:1.3rem;font-weight:900;color:#fff;line-height:1.2;margin-bottom:8px;}
+.hero-ch-desc{font-size:.82rem;color:rgba(255,255,255,.85);line-height:1.5;margin-bottom:14px;}
+.pts-pill{display:inline-flex;align-items:center;gap:5px;background:#fff;color:var(--green);font-weight:800;font-size:.82rem;padding:6px 14px;border-radius:100px;width:fit-content;}
+/* COUNTDOWN */
+.countdown-wrap{margin:0 16px 16px;background:linear-gradient(135deg,var(--greenl),#dcfce7);border:1px solid var(--greenbg);border-radius:var(--r2);padding:16px;display:flex;align-items:center;gap:14px;}
+.countdown-icon{font-size:2rem;flex-shrink:0;}
+.countdown-label{font-size:.72rem;font-weight:800;color:var(--green);text-transform:uppercase;letter-spacing:.05em;margin-bottom:4px;}
+.countdown-time{font-size:1.5rem;font-weight:900;color:var(--text);letter-spacing:.02em;font-variant-numeric:tabular-nums;}
+.countdown-sub{font-size:.72rem;color:var(--text2);margin-top:3px;}
+/* STAT CARDS */
+.stats-row{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:0 16px;margin-bottom:18px;}
+.stat-c{background:var(--white);border:1px solid var(--border);border-radius:var(--r2);padding:14px 10px;text-align:center;box-shadow:var(--shadow);}
+.stat-em{font-size:1.3rem;margin-bottom:5px;}
+.stat-v{font-size:1.4rem;font-weight:900;color:var(--green);}
+.stat-l{font-size:.65rem;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.04em;margin-top:2px;}
+/* SOCIAL FEED */
+.post-card{background:#fff;border:1px solid var(--border);border-radius:var(--r2);margin:0 12px 14px;box-shadow:var(--shadow);overflow:hidden;}
+.post-header{padding:12px 14px;display:flex;align-items:center;gap:10px;}
+.post-name{font-size:.9rem;font-weight:800;}
+.post-meta{font-size:.72rem;color:var(--text3);margin-top:1px;}
+.post-challenge-tag{margin:0 14px 10px;display:inline-flex;align-items:center;gap:5px;background:var(--greenl);border:1px solid var(--greenbg);color:var(--green);font-size:.7rem;font-weight:700;padding:4px 10px;border-radius:100px;}
+.post-img{width:100%;max-height:300px;object-fit:cover;display:block;}
+.post-img-ph{width:100%;height:160px;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;color:var(--text3);}
+.post-caption{padding:10px 14px;font-size:.88rem;line-height:1.5;color:var(--text2);}
+.post-actions{padding:10px 14px 12px;display:flex;align-items:center;gap:14px;border-top:1px solid var(--border);}
+.action-btn{display:flex;align-items:center;gap:5px;background:none;border:none;cursor:pointer;font-family:var(--font);font-size:.82rem;font-weight:700;color:var(--text2);padding:6px 10px;border-radius:8px;transition:all .15s;}
+.action-btn:hover{background:var(--bg2);}
+.action-btn.liked{color:var(--red);}
+.action-btn.liked:hover{background:var(--redl);}
+.post-pts{margin-left:auto;background:var(--greenl);color:var(--green);font-size:.7rem;font-weight:800;padding:4px 10px;border-radius:100px;border:1px solid var(--greenbg);}
+.comments-area{padding:0 14px 12px;border-top:1px solid var(--border);}
+.comment-item{padding:8px 0;border-bottom:1px solid var(--bg2);}
+.comment-item:last-child{border-bottom:none;}
+.comment-author{font-size:.78rem;font-weight:800;color:var(--text);}
+.comment-text{font-size:.82rem;color:var(--text2);margin-top:2px;}
+.comment-time{font-size:.65rem;color:var(--text3);margin-top:1px;}
+.comment-input-row{display:flex;gap:8px;margin-top:10px;}
+.comment-input{flex:1;padding:9px 12px;background:var(--bg);border:1.5px solid var(--border);border-radius:10px;font-family:var(--font);font-size:.84rem;color:var(--text);outline:none;}
+.comment-input:focus{border-color:var(--green);}
+/* LEADERBOARD */
+.lb-item{display:flex;align-items:center;gap:12px;padding:12px 16px;border-bottom:1px solid var(--border);}
+.lb-item:last-child{border-bottom:none;}
+.lb-rank{width:32px;height:32px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:800;flex-shrink:0;}
+.lb-r1{background:#fef3c7;color:#92400e;border:1.5px solid #fde68a;}
+.lb-r2{background:#f1f5f9;color:#475569;border:1.5px solid #cbd5e1;}
+.lb-r3{background:#fff7ed;color:#9a3412;border:1.5px solid #fed7aa;}
+.lb-ro{background:var(--bg);color:var(--text3);border:1px solid var(--border);font-size:.72rem;}
+.lb-info{flex:1;min-width:0;}
+.lb-name{font-size:.88rem;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lb-sub{font-size:.7rem;color:var(--text3);margin-top:1px;}
+.lb-pts{font-size:.95rem;font-weight:900;color:var(--green);}
+/* CHAT */
+.chat-screen{display:flex;flex-direction:column;height:calc(100vh - 76px);}
+.chat-messages{flex:1;overflow-y:auto;padding:12px;}
+.msg-row{display:flex;gap:8px;margin-bottom:12px;align-items:flex-end;}
+.msg-row.mine{flex-direction:row-reverse;}
+.msg-bubble{max-width:72%;padding:9px 13px;border-radius:18px;font-size:.86rem;line-height:1.45;}
+.msg-row:not(.mine) .msg-bubble{background:var(--bg);border:1px solid var(--border);border-bottom-left-radius:4px;color:var(--text);}
+.msg-row.mine .msg-bubble{background:var(--green);color:#fff;border-bottom-right-radius:4px;}
+.msg-name{font-size:.68rem;font-weight:800;color:var(--text2);margin-bottom:3px;}
+.msg-row.mine .msg-name{text-align:right;color:rgba(255,255,255,.7);}
+.msg-time{font-size:.62rem;color:var(--text3);margin-top:2px;}
+.msg-row.mine .msg-time{text-align:right;color:rgba(255,255,255,.6);}
+.admin-badge{background:var(--greenl);color:var(--green);font-size:.58rem;font-weight:800;padding:2px 5px;border-radius:4px;margin-left:4px;}
+.chat-input-bar{padding:10px 12px;border-top:1px solid var(--border);background:#fff;display:flex;gap:8px;align-items:center;}
+.chat-inp{flex:1;padding:10px 14px;background:var(--bg);border:1.5px solid var(--border);border-radius:100px;font-family:var(--font);font-size:.88rem;color:var(--text);outline:none;}
+.chat-inp:focus{border-color:var(--green);}
+.chat-send{width:40px;height:40px;background:var(--green);color:#fff;border:none;border-radius:50%;cursor:pointer;font-size:1rem;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+/* PROFILE */
+.profile-cover{height:100px;background:linear-gradient(135deg,var(--green),var(--green2));position:relative;}
+.profile-avatar-wrap{position:absolute;bottom:-30px;left:16px;border:3px solid #fff;border-radius:50%;box-shadow:var(--shadow2);}
+.profile-info{padding:40px 16px 16px;}
+.profile-name{font-size:1.3rem;font-weight:900;}
+.profile-sub{font-size:.82rem;color:var(--text2);margin-top:3px;}
+.level-wrap{background:var(--greenl);border:1px solid var(--greenbg);border-radius:var(--r2);padding:14px;margin:0 16px 16px;}
+.level-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.level-name{font-size:.88rem;font-weight:800;color:var(--green);}
+.level-pts{font-size:.82rem;font-weight:700;color:var(--text2);}
+.level-bar-bg{height:8px;background:var(--greenbg);border-radius:4px;overflow:hidden;}
+.level-bar-fill{height:100%;background:linear-gradient(90deg,var(--green),var(--green2));border-radius:4px;transition:width .6s;}
+/* ADMIN */
+.admin-section{margin:0 12px 16px;}
+.admin-section-title{font-size:.82rem;font-weight:800;color:var(--text2);text-transform:uppercase;letter-spacing:.05em;margin-bottom:10px;padding:0 2px;}
+.challenge-admin-card{background:#fff;border:1px solid var(--border);border-radius:var(--r2);padding:14px;margin-bottom:10px;box-shadow:var(--shadow);}
+.challenge-admin-card .cac-title{font-size:.92rem;font-weight:800;margin-bottom:4px;}
+.challenge-admin-card .cac-meta{font-size:.72rem;color:var(--text3);}
+.challenge-admin-card .cac-actions{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap;}
+.user-admin-row{display:flex;align-items:center;gap:10px;padding:12px 0;border-bottom:1px solid var(--border);}
+.user-admin-row:last-child{border-bottom:none;}
+/* MODAL */
+.modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.4);backdrop-filter:blur(4px);z-index:200;display:flex;align-items:flex-end;justify-content:center;}
+.modal-sheet{background:#fff;border-radius:24px 24px 0 0;width:100%;max-width:430px;padding:20px 18px max(20px,env(safe-area-inset-bottom));max-height:90vh;overflow-y:auto;}
+.modal-handle{width:36px;height:4px;background:var(--border2);border-radius:2px;margin:0 auto 16px;}
+.modal-title{font-size:1.05rem;font-weight:900;margin-bottom:16px;}
+/* SECTION HEAD */
+.sec-head{display:flex;align-items:center;justify-content:space-between;padding:0 16px;margin-bottom:10px;}
+.sec-title{font-size:1rem;font-weight:900;}
+.sec-link{font-size:.78rem;font-weight:700;color:var(--green);background:none;border:none;cursor:pointer;}
+/* EMPTY */
+.empty{text-align:center;padding:40px 20px;color:var(--text3);}
+.empty-icon{font-size:3rem;margin-bottom:12px;}
+.empty h3{font-size:.95rem;font-weight:800;color:var(--text2);margin-bottom:4px;}
+/* UTILS */
+.mt8{margin-top:8px;}.mt12{margin-top:12px;}.mt16{margin-top:16px;}.mb12{margin-bottom:12px;}.mb16{margin-bottom:16px;}.mb20{margin-bottom:20px;}
+.px16{padding:0 16px;}.py12{padding:12px 0;}
+.flex{display:flex;}.fc{display:flex;align-items:center;}.fcc{display:flex;align-items:center;justify-content:center;}
+.gap6{gap:6px;}.gap8{gap:8px;}.gap10{gap:10px;}.gap12{gap:12px;}
+.fw7{font-weight:700;}.fw8{font-weight:800;}.fw9{font-weight:900;}
+.text-sm{font-size:.82rem;}.text-xs{font-size:.72rem;}.text-muted{color:var(--text2);}.text-green{color:var(--green);}
+.divider{height:1px;background:var(--border);margin:12px 0;}
+.spin{width:32px;height:32px;border:3px solid var(--greenbg);border-top-color:var(--green);border-radius:50%;animation:spin .7s linear infinite;margin:40px auto;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.fade{animation:fade .25s ease;}
+@keyframes fade{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+const {useState,useEffect,useContext,createContext,useRef,useCallback} = React;
+
+/* ══════════════════════════════════════
+   DATABASE
+══════════════════════════════════════ */
+const gid = () => Math.random().toString(36).substr(2,8)+Date.now().toString(36);
+const K = {u:'gc3_users',ch:'gc3_challenges',pr:'gc3_proofs',co:'gc3_comments',ms:'gc3_messages',se:'gc3_settings',cu:'gc3_cu'};
+const AV_COLORS = ['green','blue','purple','orange','pink','teal'];
+
+const DEFAULT_SETTINGS = {publish_hour:'13',publish_minute:'00'};
+
+function initDB(){
+  if(!localStorage.getItem(K.u)){
+    localStorage.setItem(K.u,JSON.stringify([{
+      id:'admin_001',email:'calvin.nevesp@gmail.com',full_name:'Calvin Neves',
+      role:'admin',student_class:null,password:'calvin',total_points:0,avatar_color:'green'
+    }]));
+  }
+  if(!localStorage.getItem(K.ch)){
+    const today = new Date().toISOString().split('T')[0];
+    localStorage.setItem(K.ch,JSON.stringify([
+      {id:'ch001',title:'Ramasse 2 déchets autour de toi',description:'Prends le temps de ramasser au moins 2 déchets dans ou autour de ton école. Prends une photo pour prouver ton geste !',category:'environment',scheduled_date:today,status:'active',points_base:40,points_rank1_mult:5,points_rank2_mult:3,points_rank3_mult:2,created_date:new Date().toISOString()},
+      {id:'ch002',title:'Dis bonjour à un inconnu',description:'Fais un geste social positif : salue quelqu\'un que tu ne connais pas encore dans ton école.',category:'social',scheduled_date:new Date(Date.now()+86400000).toISOString().split('T')[0],status:'scheduled',points_base:20,points_rank1_mult:5,points_rank2_mult:3,points_rank3_mult:2,created_date:new Date().toISOString()},
+    ]));
+  }
+  if(!localStorage.getItem(K.pr)) localStorage.setItem(K.pr,JSON.stringify([]));
+  if(!localStorage.getItem(K.co)) localStorage.setItem(K.co,JSON.stringify([]));
+  if(!localStorage.getItem(K.ms)) localStorage.setItem(K.ms,JSON.stringify([]));
+  if(!localStorage.getItem(K.se)) localStorage.setItem(K.se,JSON.stringify(DEFAULT_SETTINGS));
+}
+initDB();
+
+const db={
+  // USERS
+  users:()=>JSON.parse(localStorage.getItem(K.u)||'[]'),
+  saveUsers:u=>localStorage.setItem(K.u,JSON.stringify(u)),
+  userByEmail:e=>db.users().find(u=>u.email===e),
+  createUser:d=>{const us=db.users();const nu={...d,id:gid(),total_points:0,avatar_color:AV_COLORS[us.length%AV_COLORS.length]};us.push(nu);db.saveUsers(us);return nu;},
+  updateUser:(id,up)=>{const us=db.users();const i=us.findIndex(u=>u.id===id);if(i!==-1){us[i]={...us[i],...up};db.saveUsers(us);return us[i];}},
+  addPoints:(id,pts)=>{const us=db.users();const i=us.findIndex(u=>u.id===id);if(i!==-1){us[i].total_points=(us[i].total_points||0)+Number(pts);db.saveUsers(us);const cu=db.getCU();if(cu&&cu.id===id){db.setCU(us[i]);}return us[i];}},
+  // AUTH
+  getCU:()=>JSON.parse(localStorage.getItem(K.cu)||'null'),
+  setCU:u=>localStorage.setItem(K.cu,JSON.stringify(u)),
+  clearCU:()=>localStorage.removeItem(K.cu),
+  login:(email,pw)=>{const u=db.userByEmail(email);if(u&&u.password===pw){db.setCU(u);return u;}return null;},
+  register:d=>{if(db.userByEmail(d.email))return null;const u=db.createUser({...d,role:'user'});db.setCU(u);return u;},
+  // CHALLENGES
+  challenges:()=>JSON.parse(localStorage.getItem(K.ch)||'[]'),
+  saveCh:c=>localStorage.setItem(K.ch,JSON.stringify(c)),
+  chById:id=>db.challenges().find(c=>c.id===id),
+  createCh:d=>{const cs=db.challenges();const nc={...d,id:gid(),points_rank1_mult:d.points_rank1_mult||5,points_rank2_mult:d.points_rank2_mult||3,points_rank3_mult:d.points_rank3_mult||2,created_date:new Date().toISOString()};cs.push(nc);db.saveCh(cs);return nc;},
+  updateCh:(id,up)=>{const cs=db.challenges();const i=cs.findIndex(c=>c.id===id);if(i!==-1){cs[i]={...cs[i],...up};db.saveCh(cs);return cs[i];}},
+  deleteCh:id=>db.saveCh(db.challenges().filter(c=>c.id!==id)),
+  activeChallenge:()=>{const today=new Date().toISOString().split('T')[0];return db.challenges().find(c=>c.scheduled_date===today&&(c.status==='active'||c.status==='scheduled'))||db.challenges().find(c=>c.status==='active');},
+  nextChallenge:()=>{const today=new Date().toISOString().split('T')[0];const sorted=db.challenges().filter(c=>c.scheduled_date>=today&&c.status==='scheduled').sort((a,b)=>a.scheduled_date.localeCompare(b.scheduled_date));return sorted[0]||null;},
+  // PROOFS
+  proofs:()=>JSON.parse(localStorage.getItem(K.pr)||'[]'),
+  savePr:p=>localStorage.setItem(K.pr,JSON.stringify(p)),
+  proofsByCh:cid=>db.proofs().filter(p=>p.challenge_id===cid),
+  proofsByUser:email=>db.proofs().filter(p=>p.student_email===email),
+  createProof:d=>{const ps=db.proofs();const np={...d,id:gid(),created_date:new Date().toISOString(),status:'pending',likes:0,liked_by:[],points_awarded:0,validation_rank:null};ps.push(np);db.savePr(ps);return np;},
+  updateProof:(id,up)=>{const ps=db.proofs();const i=ps.findIndex(p=>p.id===id);if(i!==-1){ps[i]={...ps[i],...up};db.savePr(ps);return ps[i];}},
+  likeProof:(pid,email)=>{const ps=db.proofs();const i=ps.findIndex(p=>p.id===pid);if(i!==-1){const lb=ps[i].liked_by||[];if(lb.includes(email)){ps[i].liked_by=lb.filter(e=>e!==email);ps[i].likes=Math.max(0,(ps[i].likes||0)-1);}else{ps[i].liked_by=[...lb,email];ps[i].likes=(ps[i].likes||0)+1;}db.savePr(ps);return ps[i];}},
+  validateProof:(pid,cid)=>{const validated=db.proofs().filter(p=>p.challenge_id===cid&&p.status==='validated').length;const rank=validated+1;const ch=db.chById(cid);const base=ch?.points_base||20;const m1=ch?.points_rank1_mult||5;const m2=ch?.points_rank2_mult||3;const m3=ch?.points_rank3_mult||2;const pts=rank===1?base*m1:rank===2?base*m2:rank===3?base*m3:base;const proof=db.updateProof(pid,{status:'validated',validation_rank:rank,points_awarded:pts,validated_at:new Date().toISOString()});if(proof){db.addPoints(db.users().find(u=>u.email===proof.student_email)?.id,pts);}return proof;},
+  rejectProof:(pid,fb)=>db.updateProof(pid,{status:'rejected',rejection_feedback:fb}),
+  // COMMENTS (on proofs + on challenges)
+  comments:()=>JSON.parse(localStorage.getItem(K.co)||'[]'),
+  saveComments:c=>localStorage.setItem(K.co,JSON.stringify(c)),
+  commentsByRef:(refId)=>db.comments().filter(c=>c.ref_id===refId),
+  addComment:d=>{const cs=db.comments();const nc={...d,id:gid(),created_date:new Date().toISOString()};cs.push(nc);db.saveComments(cs);return nc;},
+  // MESSAGES (chat)
+  messages:()=>JSON.parse(localStorage.getItem(K.ms)||'[]'),
+  saveMessages:m=>localStorage.setItem(K.ms,JSON.stringify(m)),
+  addMessage:d=>{const ms=db.messages();const nm={...d,id:gid(),created_date:new Date().toISOString()};ms.push(nm);db.saveMessages(ms);return nm;},
+  // SETTINGS
+  settings:()=>JSON.parse(localStorage.getItem(K.se)||JSON.stringify(DEFAULT_SETTINGS)),
+  saveSettings:s=>localStorage.setItem(K.se,JSON.stringify(s)),
+  // LEADERBOARD
+  leaderboard:()=>db.users().filter(u=>u.role==='user').sort((a,b)=>(b.total_points||0)-(a.total_points||0)),
+  classLeaderboard:()=>{const m={};db.users().filter(u=>u.role==='user').forEach(u=>{if(u.student_class){if(!m[u.student_class])m[u.student_class]=0;m[u.student_class]+=(u.total_points||0);}});return Object.entries(m).sort((a,b)=>b[1]-a[1]).map(([c,p])=>({class:c,points:p}));},
+};
+
+/* ══════════════════════════════════════
+   HELPERS
+══════════════════════════════════════ */
+const initials=n=>n?.split(' ').map(x=>x[0]).join('').toUpperCase().slice(0,2)||'?';
+const CLASSES=['Bachelor 1','Bachelor 2','Bachelor 3','Master 1','Master 2','BTS'];
+const CAT={environment:{l:'Environnement',e:'🌿'},social:{l:'Social',e:'🤝'},wellbeing:{l:'Bien-être',e:'💆'},education:{l:'Éducation',e:'📚'}};
+const STATUS_BADGE={draft:'badge-gray',scheduled:'badge-yellow',active:'badge-green',completed:'badge-gray'};
+const STATUS_LABEL={draft:'Brouillon',scheduled:'Planifié',active:'Actif',completed:'Terminé'};
+
+const getLevel=pts=>{
+  if(pts>=500)return{l:'Éco-Champion',e:'🏆',color:'#f59e0b',next:null};
+  if(pts>=200)return{l:'Or',e:'🥇',color:'#f59e0b',next:500};
+  if(pts>=100)return{l:'Argent',e:'🥈',color:'#94a3b8',next:200};
+  if(pts>=40)return{l:'Bronze',e:'🥉',color:'#f97316',next:100};
+  return{l:'Débutant',e:'🌱',color:'#16a34a',next:40};
+};
+
+const timeAgo=d=>{const diff=Date.now()-new Date(d).getTime();const m=Math.floor(diff/60000);if(m<1)return"À l'instant";if(m<60)return`${m}min`;const h=Math.floor(m/60);if(h<24)return`${h}h`;return`${Math.floor(h/24)}j`;};
+
+const fmt2=n=>String(n).padStart(2,'0');
+
+function Avatar({name,color='green',size=38,style={}}){
+  return <div className={`av av-${color}`} style={{width:size,height:size,borderRadius:size*.28,fontSize:size*.33,...style}}>{initials(name)}</div>;
+}
+
+/* ══════════════════════════════════════
+   AUTH CONTEXT
+══════════════════════════════════════ */
+const AuthCtx=createContext(null);
+const useAuth=()=>useContext(AuthCtx);
+function AuthProvider({children}){
+  const [user,setUser]=useState(null);
+  const [loading,setLoading]=useState(true);
+  useEffect(()=>{setUser(db.getCU());setLoading(false);},[]);
+  const login=(e,p)=>{const u=db.login(e,p);if(u)setUser(u);return u;};
+  const logout=()=>{db.clearCU();setUser(null);};
+  const register=d=>{const u=db.register(d);if(u)setUser(u);return u;};
+  const updateUser=up=>{if(user){const u=db.updateUser(user.id,up);if(u){setUser(u);db.setCU(u);}return u;}};
+  const refreshUser=()=>{const u=db.users().find(u=>u.id===user?.id);if(u){setUser(u);db.setCU(u);}};
+  return <AuthCtx.Provider value={{user,loading,login,logout,register,updateUser,refreshUser}}>{children}</AuthCtx.Provider>;
+}
+
+/* ══════════════════════════════════════
+   AUTH SCREEN
+══════════════════════════════════════ */
+function AuthScreen({onAuth}){
+  const [mode,setMode]=useState('login');
+  const [err,setErr]=useState('');
+  const [f,setF]=useState({email:'',password:'',full_name:'',student_class:''});
+  const {login,register}=useAuth();
+  const submit=e=>{
+    e.preventDefault();setErr('');
+    if(mode==='login'){const u=login(f.email,f.password);if(u)onAuth(u);else setErr('Email ou mot de passe incorrect.');}
+    else{
+      if(!f.email.includes('@')){setErr('Email invalide.');return;}
+      if(f.password.length<4){setErr('Mot de passe trop court.');return;}
+      if(!f.student_class){setErr('Sélectionne ta classe.');return;}
+      const u=register({...f});if(u)onAuth(u);else setErr('Cet email est déjà utilisé.');
+    }
+  };
+  return(
+    <div className="auth-wrap">
+      <div className="auth-logo">🌱</div>
+      <h1 className="auth-title">Green Challenge</h1>
+      <p className="auth-sub">Relève des défis quotidiens, gagne des points et inspire ta communauté !</p>
+      <div className="auth-box">
+        <div className="tabs">
+          <button className={`tab${mode==='login'?' active':''}`} onClick={()=>{setMode('login');setErr('');}}>Connexion</button>
+          <button className={`tab${mode==='register'?' active':''}`} onClick={()=>{setMode('register');setErr('');}}>Inscription</button>
+        </div>
+        {err&&<div className="alert alert-err">⚠️ {err}</div>}
+        <form onSubmit={submit}>
+          {mode==='register'&&<div className="inp-wrap"><label className="inp-label">Nom complet</label><input className="inp" type="text" required placeholder="Marie Dupont" value={f.full_name} onChange={e=>setF({...f,full_name:e.target.value})}/></div>}
+          <div className="inp-wrap"><label className="inp-label">Email</label><input className="inp" type="email" required placeholder="ton@email.com" value={f.email} onChange={e=>setF({...f,email:e.target.value})}/></div>
+          <div className="inp-wrap"><label className="inp-label">Mot de passe</label><input className="inp" type="password" required placeholder="••••••" value={f.password} onChange={e=>setF({...f,password:e.target.value})}/></div>
+          {mode==='register'&&<div className="inp-wrap"><label className="inp-label">Classe</label><select className="sel" required value={f.student_class} onChange={e=>setF({...f,student_class:e.target.value})}><option value="">Choisir ma classe</option>{CLASSES.map(c=><option key={c} value={c}>{c}</option>)}</select></div>}
+          <button type="submit" className="btn btn-green" style={{marginTop:4}}>{mode==='login'?'Se connecter 🚀':"Rejoindre 🌱"}</button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   COUNTDOWN
+══════════════════════════════════════ */
+function Countdown(){
+  const [time,setTime]=useState('');
+  const [label,setLabel]=useState('');
+  useEffect(()=>{
+    const tick=()=>{
+      const settings=db.settings();
+      const now=new Date();
+      const active=db.activeChallenge();
+      const next=db.nextChallenge();
+      const target=next||active;
+      if(!target){setTime('--:--:--');setLabel('Aucun défi planifié');return;}
+      const h=parseInt(settings.publish_hour||'13');
+      const m=parseInt(settings.publish_minute||'0');
+      let d=new Date(target.scheduled_date+'T'+String(h).padStart(2,'0')+':'+String(m).padStart(2,'0')+':00');
+      if(d<now){// published already, countdown to next
+        d=new Date(d.getTime()+86400000);
+      }
+      const diff=d-now;
+      if(diff<=0){setTime('00:00:00');setLabel('Défi en cours !');return;}
+      const hh=Math.floor(diff/3600000);
+      const mm=Math.floor((diff%3600000)/60000);
+      const ss=Math.floor((diff%60000)/1000);
+      setTime(`${fmt2(hh)}:${fmt2(mm)}:${fmt2(ss)}`);
+      setLabel(next?`Prochain défi : ${target.title.slice(0,30)}...`:'Défi en cours');
+    };
+    tick();const iv=setInterval(tick,1000);return()=>clearInterval(iv);
+  },[]);
+  return(
+    <div className="countdown-wrap">
+      <div className="countdown-icon">⏱️</div>
+      <div style={{flex:1}}>
+        <div className="countdown-label">Prochain défi dans</div>
+        <div className="countdown-time">{time}</div>
+        <div className="countdown-sub">{label}</div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   HOME SCREEN
+══════════════════════════════════════ */
+function HomeScreen({navigate}){
+  const {user,refreshUser}=useAuth();
+  const [challenge,setChallenge]=useState(null);
+  const [posts,setPosts]=useState([]);
+  const [rank,setRank]=useState('–');
+  useEffect(()=>{
+    setChallenge(db.activeChallenge());
+    const allProofs=db.proofs().sort((a,b)=>new Date(b.created_date)-new Date(a.created_date));
+    setPosts(allProofs.slice(0,3));
+    const lb=db.leaderboard();const r=lb.findIndex(u=>u.email===user.email)+1;setRank(r||'–');
+    refreshUser();
+  },[]);
+  const pts=user.total_points||0;
+  const level=getLevel(pts);
+  const validated=db.proofsByUser(user.email).filter(p=>p.status==='validated').length;
+  const natureImg='https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=800&q=80';
+  return(
+    <div className="screen fade">
+      <div className="topbar">
+        <div className="topbar-logo"><span className="live-dot"/>Green Challenge</div>
+        <div className="fc gap8">
+          <span className="badge badge-green">⭐ {pts}</span>
+          <Avatar name={user.full_name} color={user.avatar_color||'green'} size={32}/>
+        </div>
+      </div>
+      {/* Greeting */}
+      <div style={{padding:'16px 16px 8px'}}>
+        <p className="text-sm text-muted">Bonjour 👋</p>
+        <h2 style={{fontSize:'1.4rem',fontWeight:900}}>{user.full_name?.split(' ')[0]}</h2>
+        <div className="fc gap8 mt8">
+          <span className="badge badge-green">{level.e} {level.l}</span>
+          <span className="badge badge-gray">🏆 #{rank}</span>
+        </div>
+      </div>
+      {/* Countdown */}
+      <Countdown/>
+      {/* Hero challenge */}
+      {challenge&&(
+        <div className="hero-ch" onClick={()=>navigate('challenge')}>
+          <div className="hero-ch-bg"><img src={natureImg} alt="" onError={e=>e.target.style.display='none'}/></div>
+          <div className="hero-ch-overlay"/>
+          <div className="hero-ch-content">
+            <div className="hero-ch-tag">{CAT[challenge.category]?.e} Défi du jour</div>
+            <div className="hero-ch-title">{challenge.title}</div>
+            <div className="hero-ch-desc">{challenge.description?.slice(0,80)}...</div>
+            <div className="pts-pill">⭐ {challenge.points_base} pts · Appuie pour participer →</div>
+          </div>
+        </div>
+      )}
+      {!challenge&&(
+        <div style={{margin:'16px',background:'var(--greenl)',border:'1px solid var(--greenbg)',borderRadius:'var(--r2)',padding:'24px',textAlign:'center'}}>
+          <div style={{fontSize:'2rem',marginBottom:8}}>🌙</div>
+          <p className="fw8">Pas de défi actif aujourd'hui</p>
+          <p className="text-sm text-muted mt8">Reviens demain à l'heure configurée !</p>
+        </div>
+      )}
+      {/* Stats */}
+      <div className="sec-head mt8"><span className="sec-title">Mes stats</span></div>
+      <div className="stats-row">
+        <div className="stat-c"><div className="stat-em">⭐</div><div className="stat-v">{pts}</div><div className="stat-l">Points</div></div>
+        <div className="stat-c"><div className="stat-em">✅</div><div className="stat-v" style={{color:'var(--blue)'}}>{validated}</div><div className="stat-l">Validés</div></div>
+        <div className="stat-c"><div className="stat-em">🏆</div><div className="stat-v" style={{color:'var(--gold)'}}>{rank==='–'?'–':'#'+rank}</div><div className="stat-l">Rang</div></div>
+      </div>
+      {/* Recent posts */}
+      {posts.length>0&&(
+        <>
+          <div className="sec-head"><span className="sec-title">Fil d'actualité</span><button className="sec-link" onClick={()=>navigate('feed')}>Tout voir →</button></div>
+          {posts.slice(0,2).map(p=><MiniPostCard key={p.id} proof={p} navigate={navigate}/>)}
+        </>
+      )}
+      <div style={{height:12}}/>
+    </div>
+  );
+}
+
+function MiniPostCard({proof,navigate}){
+  const ch=db.chById(proof.challenge_id);
+  const u=db.userByEmail(proof.student_email);
+  return(
+    <div className="post-card" onClick={()=>navigate('feed')} style={{cursor:'pointer'}}>
+      <div className="post-header">
+        <Avatar name={proof.student_name} color={u?.avatar_color||'green'} size={36}/>
+        <div style={{flex:1}}><div className="post-name">{proof.student_name}</div><div className="post-meta">{proof.student_class} · {timeAgo(proof.created_date)}</div></div>
+        <span className={`badge ${proof.status==='validated'?'badge-green':proof.status==='rejected'?'badge-red':'badge-yellow'}`}>{proof.status==='validated'?'✅':proof.status==='rejected'?'❌':'⏳'}</span>
+      </div>
+      {ch&&<div className="post-challenge-tag">{CAT[ch.category]?.e} {ch.title?.slice(0,30)}</div>}
+      <div className="post-actions" style={{borderTop:'1px solid var(--border)'}}>
+        <span className="action-btn">❤️ {proof.likes||0}</span>
+        {proof.points_awarded>0&&<span className="post-pts">+{proof.points_awarded} pts</span>}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   CHALLENGE SCREEN
+══════════════════════════════════════ */
+function ChallengeScreen(){
+  const {user}=useAuth();
+  const [challenge,setChallenge]=useState(null);
+  const [myProof,setMyProof]=useState(null);
+  const [proofs,setProofs]=useState([]);
+  const [file,setFile]=useState(null);
+  const [preview,setPreview]=useState(null);
+  const [comment,setComment]=useState('');
+  const [submitting,setSubmitting]=useState(false);
+  const [done,setDone]=useState(false);
+  const [err,setErr]=useState('');
+  // challenge likes/comments
+  const [chLikes,setChLikes]=useState([]);
+  const [chComments,setChComments]=useState([]);
+  const [chComment,setChComment]=useState('');
+  const [showChComments,setShowChComments]=useState(false);
+
+  const load=()=>{
+    const c=db.activeChallenge();setChallenge(c);
+    if(c){
+      const all=db.proofsByCh(c.id);setProofs(all);
+      setMyProof(all.find(p=>p.student_email===user.email)||null);
+      const likeData=JSON.parse(localStorage.getItem('gc3_ch_likes_'+c.id)||'[]');
+      setChLikes(likeData);
+      setChComments(db.commentsByRef('ch_'+c.id));
+    }
+  };
+  useEffect(()=>{load();const iv=setInterval(load,8000);return()=>clearInterval(iv);},[user]);
+
+  const handleFile=e=>{const f=e.target.files[0];if(!f)return;const r=new FileReader();r.onloadend=()=>{setFile(r.result);setPreview(r.result);};r.readAsDataURL(f);};
+
+  const submit=e=>{
+    e.preventDefault();if(!file){setErr('Ajoute une photo !');return;}
+    setSubmitting(true);
+    setTimeout(()=>{db.createProof({challenge_id:challenge.id,student_name:user.full_name,student_email:user.email,student_class:user.student_class,file_url:file,comment});setDone(true);setSubmitting(false);load();},600);
+  };
+
+  const toggleChLike=()=>{
+    const key='gc3_ch_likes_'+challenge.id;
+    const likes=JSON.parse(localStorage.getItem(key)||'[]');
+    const newLikes=likes.includes(user.email)?likes.filter(e=>e!==user.email):[...likes,user.email];
+    localStorage.setItem(key,JSON.stringify(newLikes));setChLikes(newLikes);
+  };
+  const addChComment=()=>{
+    if(!chComment.trim())return;
+    db.addComment({ref_id:'ch_'+challenge.id,author_name:user.full_name,author_email:user.email,content:chComment});
+    setChComment('');setChComments(db.commentsByRef('ch_'+challenge.id));
+  };
+
+  if(!challenge)return(<div className="screen fade"><div className="topbar"><h2 className="fw9" style={{fontSize:'1.05rem'}}>Défi du jour</h2></div><div className="empty"><div className="empty-icon">🌙</div><h3>Pas de défi actif</h3><p>Reviens plus tard !</p></div></div>);
+
+  const chLiked=chLikes.includes(user.email);
+
+  return(
+    <div className="screen fade">
+      <div className="topbar">
+        <h2 className="fw9" style={{fontSize:'1.05rem'}}>Défi du jour</h2>
+        <span className={`badge badge-${challenge.category==='environment'?'green':challenge.category==='social'?'blue':'gold'}`}>{CAT[challenge.category]?.e} {CAT[challenge.category]?.l}</span>
+      </div>
+      {/* Challenge card */}
+      <div style={{margin:'14px 12px 0'}}>
+        <div className="card" style={{overflow:'hidden'}}>
+          <div style={{height:160,background:'linear-gradient(135deg,#16a34a,#4ade80)',position:'relative',display:'flex',alignItems:'flex-end'}}>
+            <img src="https://images.unsplash.com/photo-1542601906990-b4d3fb778b09?w=800&q=80" alt="" style={{position:'absolute',inset:0,width:'100%',height:'100%',objectFit:'cover',opacity:.35}} onError={e=>e.target.style.display='none'}/>
+            <div style={{position:'relative',padding:'16px',width:'100%',background:'linear-gradient(to top,rgba(0,0,0,.5),transparent)'}}>
+              <h3 style={{color:'#fff',fontWeight:900,fontSize:'1.1rem',lineHeight:1.2}}>{challenge.title}</h3>
+            </div>
+          </div>
+          <div className="card-pad">
+            <p className="text-sm text-muted" style={{lineHeight:1.6,marginBottom:12}}>{challenge.description}</p>
+            <div className="fc gap8 mb12">
+              <span className="pts-pill">⭐ {challenge.points_base} pts de base</span>
+              <span className="text-xs text-muted">🥇×{challenge.points_rank1_mult||5} 🥈×{challenge.points_rank2_mult||3} 🥉×{challenge.points_rank3_mult||2}</span>
+            </div>
+            {/* Like/comment on challenge */}
+            <div style={{borderTop:'1px solid var(--border)',paddingTop:10}}>
+              <div className="fc gap8">
+                <button className={`action-btn${chLiked?' liked':''}`} onClick={toggleChLike}>{chLiked?'❤️':'🤍'} {chLikes.length}</button>
+                <button className="action-btn" onClick={()=>setShowChComments(!showChComments)}>💬 {chComments.length}</button>
+              </div>
+              {showChComments&&(
+                <div style={{marginTop:10}}>
+                  {chComments.map(c=><div key={c.id} className="comment-item"><span className="comment-author">{c.author_name}</span><div className="comment-text">{c.content}</div></div>)}
+                  <div className="comment-input-row mt8">
+                    <input className="comment-input" placeholder="Commenter le défi..." value={chComment} onChange={e=>setChComment(e.target.value)} onKeyDown={e=>e.key==='Enter'&&addChComment()}/>
+                    <button className="btn btn-green btn-sm" onClick={addChComment} style={{flexShrink:0}}>↑</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Submit proof */}
+      <div style={{margin:'14px 12px 0'}}>
+        {myProof?(
+          <div className="card card-pad">
+            <h3 className="fw9 mb12">Ma participation 📸</h3>
+            {done&&<div className="alert alert-ok">🎉 Preuve envoyée ! Visible par tous en attendant la validation.</div>}
+            {myProof.file_url&&<img src={myProof.file_url} alt="" style={{width:'100%',borderRadius:10,maxHeight:220,objectFit:'cover',marginBottom:10}}/>}
+            {myProof.comment&&<p className="text-sm text-muted mb12">{myProof.comment}</p>}
+            <span className={`badge ${myProof.status==='validated'?'badge-green':myProof.status==='rejected'?'badge-red':'badge-yellow'}`}>
+              {myProof.status==='validated'?`✅ Validé — +${myProof.points_awarded} pts (Rang #${myProof.validation_rank})`:myProof.status==='rejected'?'❌ Refusée':'⏳ En attente de validation'}
+            </span>
+            {myProof.rejection_feedback&&<div className="alert alert-err mt12">💬 {myProof.rejection_feedback}</div>}
+          </div>
+        ):(
+          <div className="card card-pad">
+            <h3 className="fw9 mb12">Soumettre ma preuve 📷</h3>
+            {err&&<div className="alert alert-err">{err}</div>}
+            <form onSubmit={submit}>
+              <div className="inp-wrap">
+                <label className="inp-label">Photo / Preuve *</label>
+                <label style={{display:'block',border:'2px dashed var(--border2)',borderRadius:12,padding:'20px',textAlign:'center',cursor:'pointer',background:preview?'transparent':'var(--bg)',transition:'all .2s'}}>
+                  <input type="file" accept="image/*" onChange={handleFile} style={{display:'none'}}/>
+                  {preview?<img src={preview} alt="" style={{width:'100%',maxHeight:200,objectFit:'cover',borderRadius:8}}/>:<><div style={{fontSize:'2rem',marginBottom:6}}>📸</div><p className="text-sm text-muted">Appuie pour ajouter une photo</p></>}
+                </label>
+              </div>
+              <div className="inp-wrap">
+                <label className="inp-label">Commentaire (optionnel)</label>
+                <textarea className="ta" placeholder="Décris ton action..." value={comment} onChange={e=>setComment(e.target.value)}/>
+              </div>
+              <div style={{background:'var(--greenl)',border:'1px solid var(--greenbg)',borderRadius:10,padding:'10px 12px',marginBottom:14,fontSize:'.78rem',color:'var(--text2)'}}>
+                Soumis en tant que <strong className="text-green">{user.full_name}</strong> · {user.student_class}
+              </div>
+              <button type="submit" className="btn btn-green" disabled={submitting} style={{fontSize:'1rem',padding:'14px',fontWeight:900}}>
+                {submitting?'⏳ Envoi...':'📤 Soumettre ma preuve'}
+              </button>
+            </form>
+          </div>
+        )}
+      </div>
+
+      {/* Ranking */}
+      {proofs.filter(p=>p.status==='validated').length>0&&(
+        <div style={{margin:'14px 12px 20px'}}>
+          <h3 className="fw9 mb12" style={{padding:'0 2px'}}>🏆 Classement du défi</h3>
+          <div className="card">
+            {proofs.filter(p=>p.status==='validated').sort((a,b)=>a.validation_rank-b.validation_rank).map(p=>{
+              const u=db.userByEmail(p.student_email);
+              return(<div key={p.id} className="lb-item">
+                <div className={`lb-rank ${p.validation_rank===1?'lb-r1':p.validation_rank===2?'lb-r2':p.validation_rank===3?'lb-r3':'lb-ro'}`}>{p.validation_rank<=3?['🥇','🥈','🥉'][p.validation_rank-1]:`#${p.validation_rank}`}</div>
+                <Avatar name={p.student_name} color={u?.avatar_color||'green'} size={34}/>
+                <div className="lb-info"><div className="lb-name">{p.student_name}</div><div className="lb-sub">{p.student_class}</div></div>
+                <div className="lb-pts">+{p.points_awarded}</div>
+              </div>);
+            })}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   FEED SCREEN (Social)
+══════════════════════════════════════ */
+function FeedScreen(){
+  const {user}=useAuth();
+  const [proofs,setProofs]=useState([]);
+  const [comments,setComments]=useState({});
+  const [newComment,setNewComment]=useState({});
+  const [showComments,setShowComments]=useState({});
+
+  const load=()=>{
+    const all=db.proofs().sort((a,b)=>new Date(b.created_date)-new Date(a.created_date));
+    setProofs(all);
+    const c={};all.forEach(p=>{c[p.id]=db.commentsByRef('pr_'+p.id);});
+    setComments(c);
+  };
+  useEffect(()=>{load();const iv=setInterval(load,5000);return()=>clearInterval(iv);},[]);
+
+  const like=pid=>{db.likeProof(pid,user.email);load();};
+  const addComment=pid=>{
+    const t=newComment[pid];if(!t?.trim())return;
+    db.addComment({ref_id:'pr_'+pid,author_name:user.full_name,author_email:user.email,content:t});
+    setNewComment({...newComment,[pid]:''});
+    setComments({...comments,[pid]:db.commentsByRef('pr_'+pid)});
+  };
+
+  return(
+    <div className="screen fade">
+      <div className="topbar">
+        <h2 className="fw9" style={{fontSize:'1.05rem'}}>📱 Fil d'actualité</h2>
+        <span className="badge badge-green">🌱 {proofs.length} posts</span>
+      </div>
+      {proofs.length===0&&<div className="empty mt16"><div className="empty-icon">🌿</div><h3>Aucun post</h3><p>Sois le premier à participer !</p></div>}
+      <div style={{paddingTop:10}}>
+        {proofs.map(proof=>{
+          const ch=db.chById(proof.challenge_id);
+          const u=db.userByEmail(proof.student_email);
+          const liked=proof.liked_by?.includes(user.email);
+          const pComments=comments[proof.id]||[];
+          const showing=showComments[proof.id];
+          return(
+            <div key={proof.id} className="post-card">
+              <div className="post-header">
+                <Avatar name={proof.student_name} color={u?.avatar_color||'green'} size={38}/>
+                <div style={{flex:1}}>
+                  <div className="post-name">{proof.student_name}</div>
+                  <div className="post-meta">{proof.student_class} · {timeAgo(proof.created_date)}</div>
+                </div>
+                <span className={`badge ${proof.status==='validated'?'badge-green':proof.status==='rejected'?'badge-red':'badge-yellow'}`}>{proof.status==='validated'?'✅ Validé':proof.status==='rejected'?'❌ Refusé':'⏳ En attente'}</span>
+              </div>
+              {ch&&<div className="post-challenge-tag">{CAT[ch.category]?.e} {ch.title}</div>}
+              {proof.file_url?<img className="post-img" src={proof.file_url} alt="preuve"/>:<div className="post-img-ph"><span style={{fontSize:'2rem'}}>📸</span><p className="text-xs">Aucune image</p></div>}
+              {proof.comment&&<div className="post-caption">{proof.comment}</div>}
+              <div className="post-actions">
+                <button className={`action-btn${liked?' liked':''}`} onClick={()=>like(proof.id)}>{liked?'❤️':'🤍'} {proof.likes||0}</button>
+                <button className="action-btn" onClick={()=>setShowComments({...showComments,[proof.id]:!showing})}>💬 {pComments.length}</button>
+                {proof.validation_rank&&proof.validation_rank<=3&&<span style={{fontSize:'1.1rem'}}>{['🥇','🥈','🥉'][proof.validation_rank-1]}</span>}
+                {proof.points_awarded>0&&<span className="post-pts">+{proof.points_awarded} pts</span>}
+              </div>
+              {showing&&(
+                <div className="comments-area">
+                  {pComments.map(c=><div key={c.id} className="comment-item"><div className="comment-author">{c.author_name}</div><div className="comment-text">{c.content}</div><div className="comment-time">{timeAgo(c.created_date)}</div></div>)}
+                  <div className="comment-input-row mt8">
+                    <input className="comment-input" placeholder="Commenter..." value={newComment[proof.id]||''} onChange={e=>setNewComment({...newComment,[proof.id]:e.target.value})} onKeyDown={e=>e.key==='Enter'&&addComment(proof.id)}/>
+                    <button className="btn btn-green btn-sm" onClick={()=>addComment(proof.id)} style={{flexShrink:0}}>↑</button>
+                  </div>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      <div style={{height:10}}/>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   CHAT SCREEN
+══════════════════════════════════════ */
+function ChatScreen(){
+  const {user}=useAuth();
+  const [messages,setMessages]=useState([]);
+  const [text,setText]=useState('');
+  const bottomRef=useRef(null);
+  const load=()=>setMessages(db.messages());
+  useEffect(()=>{load();const iv=setInterval(load,3000);return()=>clearInterval(iv);},[]);
+  useEffect(()=>{bottomRef.current?.scrollIntoView({behavior:'smooth'});},[messages]);
+  const send=()=>{
+    if(!text.trim())return;
+    db.addMessage({author_name:user.full_name,author_email:user.email,author_role:user.role,avatar_color:user.avatar_color||'green',content:text});
+    setText('');load();
+  };
+  return(
+    <div className="chat-screen fade">
+      <div className="topbar">
+        <h2 className="fw9" style={{fontSize:'1.05rem'}}>💬 Chat communauté</h2>
+        <span className="badge badge-green">{db.users().filter(u=>u.role==='user').length} membres</span>
+      </div>
+      <div className="chat-messages">
+        {messages.length===0&&<div className="empty"><div className="empty-icon">💬</div><h3>Pas encore de messages</h3><p>Lance la conversation !</p></div>}
+        {messages.map(m=>{
+          const mine=m.author_email===user.email;
+          return(
+            <div key={m.id} className={`msg-row${mine?' mine':''}`}>
+              {!mine&&<Avatar name={m.author_name} color={m.avatar_color||'green'} size={30}/>}
+              <div>
+                <div className="msg-name">
+                  {m.author_name}
+                  {m.author_role==='admin'&&<span className="admin-badge">Admin</span>}
+                </div>
+                <div className="msg-bubble">{m.content}</div>
+                <div className="msg-time">{timeAgo(m.created_date)}</div>
+              </div>
+            </div>
+          );
+        })}
+        <div ref={bottomRef}/>
+      </div>
+      <div className="chat-input-bar">
+        <input className="chat-inp" placeholder="Envoyer un message..." value={text} onChange={e=>setText(e.target.value)} onKeyDown={e=>e.key==='Enter'&&send()}/>
+        <button className="chat-send" onClick={send}>↑</button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   LEADERBOARD
+══════════════════════════════════════ */
+function LeaderboardScreen(){
+  const {user}=useAuth();
+  const [tab,setTab]=useState('students');
+  const [students,setStudents]=useState([]);
+  const [classes,setClasses]=useState([]);
+  useEffect(()=>{setStudents(db.leaderboard());setClasses(db.classLeaderboard());},[]);
+  const myRank=students.findIndex(u=>u.email===user.email)+1;
+  return(
+    <div className="screen fade">
+      <div className="topbar">
+        <h2 className="fw9" style={{fontSize:'1.05rem'}}>🏆 Classement</h2>
+        {myRank>0&&<span className="badge badge-green">#{myRank} · {user.total_points||0} pts</span>}
+      </div>
+      {/* My card */}
+      <div style={{margin:'14px 12px 0',background:'linear-gradient(135deg,var(--greenl),var(--greenbg))',border:'1px solid var(--greenbg)',borderRadius:'var(--r2)',padding:'14px 16px'}}>
+        <p className="text-xs fw8 text-green" style={{textTransform:'uppercase',letterSpacing:'.05em',marginBottom:6}}>Ta position</p>
+        <div className="fc gap12">
+          <div style={{fontSize:'2rem',fontWeight:900,color:'var(--green)'}}>#{myRank||'–'}</div>
+          <div><div className="fw8">{user.full_name}</div><div className="text-xs text-muted">{user.total_points||0} pts · {user.student_class}</div></div>
+        </div>
+      </div>
+      <div style={{padding:'14px 12px 0'}}>
+        <div className="tabs">
+          <button className={`tab${tab==='students'?' active':''}`} onClick={()=>setTab('students')}>👤 Étudiants</button>
+          <button className={`tab${tab==='classes'?' active':''}`} onClick={()=>setTab('classes')}>🏫 Classes</button>
+        </div>
+      </div>
+      <div style={{margin:'0 12px 20px'}} className="card">
+        {tab==='students'&&(students.length===0?<div className="empty py12"><div className="empty-icon">🌱</div><h3>Aucun étudiant</h3></div>:students.map((s,i)=>{
+          const isMe=s.email===user.email;
+          const lv=getLevel(s.total_points||0);
+          return(<div key={s.id} className="lb-item" style={isMe?{background:'var(--greenl)'}:{}}>
+            <div className={`lb-rank ${i===0?'lb-r1':i===1?'lb-r2':i===2?'lb-r3':'lb-ro'}`}>{i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</div>
+            <Avatar name={s.full_name} color={s.avatar_color||'green'} size={34}/>
+            <div className="lb-info">
+              <div className="lb-name">{s.full_name}{isMe&&<span className="text-xs text-green"> (moi)</span>}</div>
+              <div className="lb-sub">{s.student_class} · {lv.e} {lv.l}</div>
+            </div>
+            <div className="text-right"><div className="lb-pts">{s.total_points||0}</div><div className="text-xs text-muted">pts</div></div>
+          </div>);
+        }))}
+        {tab==='classes'&&(classes.length===0?<div className="empty py12"><div className="empty-icon">🏫</div><h3>Aucune donnée</h3></div>:classes.map((c,i)=>(
+          <div key={c.class} className="lb-item" style={c.class===user.student_class?{background:'var(--greenl)'}:{}}>
+            <div className={`lb-rank ${i===0?'lb-r1':i===1?'lb-r2':i===2?'lb-r3':'lb-ro'}`}>{i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</div>
+            <div className="lb-info"><div className="lb-name">🏫 {c.class}</div></div>
+            <div className="text-right"><div className="lb-pts">{c.points}</div><div className="text-xs text-muted">pts</div></div>
+          </div>
+        )))}
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   PROFILE SCREEN
+══════════════════════════════════════ */
+function ProfileScreen({logout}){
+  const {user,updateUser,refreshUser}=useAuth();
+  const [proofs,setProofs]=useState([]);
+  const [editing,setEditing]=useState(false);
+  const [f,setF]=useState({full_name:user.full_name||'',student_class:user.student_class||''});
+  const [saved,setSaved]=useState(false);
+  useEffect(()=>{setProofs(db.proofsByUser(user.email));},[user]);
+  const pts=user.total_points||0;const level=getLevel(pts);const pct=level.next?Math.min(100,pts/level.next*100):100;
+  const validated=proofs.filter(p=>p.status==='validated');
+  const badges=[];
+  if(validated.length>=1)badges.push({e:'🌱',l:'1er défi'});
+  if(validated.length>=5)badges.push({e:'🌿',l:'5 défis'});
+  if(validated.length>=10)badges.push({e:'🌳',l:'10 défis'});
+  if(pts>=100)badges.push({e:'⭐',l:'100 pts'});
+  if(pts>=500)badges.push({e:'🏆',l:'Champion'});
+  const save=()=>{updateUser(f);setEditing(false);setSaved(true);setTimeout(()=>setSaved(false),2000);};
+  return(
+    <div className="screen fade">
+      <div className="topbar">
+        <h2 className="fw9" style={{fontSize:'1.05rem'}}>Mon Profil</h2>
+        <div className="fc gap8">
+          <button className="btn btn-gray btn-xs" onClick={()=>setEditing(!editing)}>{editing?'Annuler':'✏️ Modifier'}</button>
+          <button className="btn btn-red btn-xs" onClick={logout}>🚪</button>
+        </div>
+      </div>
+      <div className="profile-cover">
+        <div className="profile-avatar-wrap"><Avatar name={user.full_name} color={user.avatar_color||'green'} size={64}/></div>
+      </div>
+      <div className="profile-info">
+        {editing?(
+          <>
+            {saved&&<div className="alert alert-ok mb12">✅ Profil mis à jour !</div>}
+            <div className="inp-wrap"><label className="inp-label">Nom complet</label><input className="inp" value={f.full_name} onChange={e=>setF({...f,full_name:e.target.value})}/></div>
+            <div className="inp-wrap"><label className="inp-label">Classe</label><select className="sel" value={f.student_class} onChange={e=>setF({...f,student_class:e.target.value})}><option value="">–</option>{CLASSES.map(c=><option key={c} value={c}>{c}</option>)}</select></div>
+            <div className="fc gap8">
+              <button className="btn btn-green" style={{flex:1}} onClick={save}>💾 Enregistrer</button>
+              <button className="btn btn-gray" style={{flex:1}} onClick={()=>setEditing(false)}>Annuler</button>
+            </div>
+          </>
+        ):(
+          <>
+            <h2 className="profile-name">{user.full_name}</h2>
+            <p className="profile-sub">{user.email}</p>
+            <div className="fc gap8 mt8"><span className="badge badge-green">{user.student_class||'–'}</span><span className="badge badge-gold">{level.e} {level.l}</span></div>
+          </>
+        )}
+      </div>
+      <div className="level-wrap">
+        <div className="level-row"><span className="level-name">{level.e} {level.l}</span><span className="level-pts">{pts} pts{level.next?` / ${level.next}`:''}</span></div>
+        <div className="level-bar-bg"><div className="level-bar-fill" style={{width:`${pct}%`}}/></div>
+        {level.next&&<p className="text-xs text-muted mt8">Encore {level.next-pts} pts pour le niveau suivant</p>}
+      </div>
+      <div className="stats-row" style={{gridTemplateColumns:'repeat(4,1fr)',gap:8,padding:'0 12px',marginBottom:16}}>
+        {[{e:'⭐',v:pts,l:'Points'},{e:'✅',v:validated.length,l:'Validés'},{e:'📸',v:proofs.length,l:'Soumis'},{e:'❤️',v:proofs.reduce((a,p)=>a+(p.likes||0),0),l:'Likes'}].map(s=>(
+          <div key={s.l} className="stat-c" style={{padding:'10px 6px'}}>
+            <div className="stat-em" style={{fontSize:'1.1rem'}}>{s.e}</div>
+            <div className="stat-v" style={{fontSize:'1.1rem'}}>{s.v}</div>
+            <div className="stat-l">{s.l}</div>
+          </div>
+        ))}
+      </div>
+      {badges.length>0&&(
+        <div style={{padding:'0 12px 16px'}}>
+          <p className="text-xs fw8 text-muted mb12" style={{textTransform:'uppercase',letterSpacing:'.05em'}}>🎖️ Badges</p>
+          <div className="fc gap10" style={{flexWrap:'wrap'}}>
+            {badges.map(b=><div key={b.l} style={{textAlign:'center',background:'var(--greenl)',border:'1px solid var(--greenbg)',borderRadius:12,padding:'10px 12px',minWidth:64}}><div style={{fontSize:'1.5rem'}}>{b.e}</div><div className="text-xs fw8 text-green mt8">{b.l}</div></div>)}
+          </div>
+        </div>
+      )}
+      {/* History */}
+      <div style={{padding:'0 12px 24px'}}>
+        <p className="text-xs fw8 text-muted mb12" style={{textTransform:'uppercase',letterSpacing:'.05em'}}>Historique</p>
+        <div className="card">
+          {proofs.length===0?<div className="empty" style={{padding:'20px'}}><div className="empty-icon" style={{fontSize:'1.8rem'}}>📭</div><h3>Aucune participation</h3></div>:
+            proofs.slice().reverse().map(p=>(
+              <div key={p.id} className="lb-item">
+                <span className={`badge ${p.status==='validated'?'badge-green':p.status==='rejected'?'badge-red':'badge-yellow'}`}>{p.status==='validated'?'✅':p.status==='rejected'?'❌':'⏳'}</span>
+                <div className="lb-info"><div className="text-sm fw7">{new Date(p.created_date).toLocaleDateString('fr-FR')}</div></div>
+                <div className="fw8 text-green">{p.points_awarded||0} pts</div>
+              </div>
+            ))
+          }
+        </div>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   ADMIN SCREEN
+══════════════════════════════════════ */
+function AdminScreen({tab,navigate}){
+  return(
+    <div className="screen fade">
+      <div className="topbar">
+        <h2 className="fw9" style={{fontSize:'1.05rem'}}>⚙️ Administration</h2>
+        <span className="badge badge-green">🛡️ Admin</span>
+      </div>
+      <div style={{padding:'12px 12px 0'}}>
+        <div className="tabs" style={{marginBottom:16}}>
+          {[['a_dash','📊'],['a_ch','🏆 Défis'],['a_proofs','📸 Preuves'],['a_users','👤 Comptes'],['a_settings','⚙️ Réglages']].map(([v,l])=>(
+            <button key={v} className={`tab${tab===v?' active':''}`} style={{fontSize:'.72rem'}} onClick={()=>navigate(v)}>{l}</button>
+          ))}
+        </div>
+      </div>
+      {tab==='a_dash'&&<AdminDash navigate={navigate}/>}
+      {tab==='a_ch'&&<AdminChallenges/>}
+      {tab==='a_proofs'&&<AdminProofs/>}
+      {tab==='a_users'&&<AdminUsers/>}
+      {tab==='a_settings'&&<AdminSettings/>}
+    </div>
+  );
+}
+
+function AdminDash({navigate}){
+  const challenges=db.challenges();const proofs=db.proofs();const users=db.users().filter(u=>u.role==='user');
+  const pending=proofs.filter(p=>p.status==='pending').length;
+  const stats=[{e:'🏆',v:challenges.length,l:'Défis'},{e:'👤',v:users.length,l:'Étudiants'},{e:'⏳',v:pending,l:'En attente'},{e:'✅',v:proofs.filter(p=>p.status==='validated').length,l:'Validées'}];
+  return(
+    <div>
+      <div className="stats-row">{stats.map(s=><div key={s.l} className="stat-c"><div className="stat-em">{s.e}</div><div className="stat-v">{s.v}</div><div className="stat-l">{s.l}</div></div>)}</div>
+      {pending>0&&(
+        <div style={{margin:'0 12px 14px',background:'#fffbeb',border:'1px solid #fde68a',borderRadius:'var(--r2)',padding:'14px 16px',cursor:'pointer',display:'flex',alignItems:'center',gap:12}} onClick={()=>navigate('a_proofs')}>
+          <span style={{fontSize:'1.6rem'}}>⏳</span>
+          <div style={{flex:1}}><div className="fw8">{pending} preuve{pending>1?'s':''} à valider</div><div className="text-xs text-muted">Appuie pour valider →</div></div>
+        </div>
+      )}
+      <div style={{padding:'0 12px 20px'}}>
+        <p className="text-xs fw8 text-muted mb12" style={{textTransform:'uppercase',letterSpacing:'.05em'}}>Top étudiants</p>
+        <div className="card">
+          {db.leaderboard().slice(0,5).map((s,i)=>(
+            <div key={s.id} className="lb-item">
+              <div className={`lb-rank ${i===0?'lb-r1':i===1?'lb-r2':i===2?'lb-r3':'lb-ro'}`}>{i<3?['🥇','🥈','🥉'][i]:`#${i+1}`}</div>
+              <Avatar name={s.full_name} color={s.avatar_color||'green'} size={32}/>
+              <div className="lb-info"><div className="lb-name">{s.full_name}</div><div className="lb-sub">{s.student_class}</div></div>
+              <div className="lb-pts">{s.total_points||0}</div>
+            </div>
+          ))}
+          {db.leaderboard().length===0&&<div className="empty py12"><div className="empty-icon" style={{fontSize:'1.8rem'}}>🌱</div><h3>Aucun étudiant</h3></div>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+const EMPTY_CH={title:'',description:'',category:'environment',scheduled_date:'',points_base:20,points_rank1_mult:5,points_rank2_mult:3,points_rank3_mult:2,status:'draft'};
+function AdminChallenges(){
+  const [challenges,setChallenges]=useState([]);
+  const [showModal,setShowModal]=useState(false);
+  const [form,setForm]=useState(EMPTY_CH);
+  const [editing,setEditing]=useState(null);
+  const reload=()=>setChallenges(db.challenges().sort((a,b)=>new Date(b.scheduled_date)-new Date(a.scheduled_date)));
+  useEffect(reload,[]);
+  const submit=e=>{
+    e.preventDefault();
+    if(editing)db.updateCh(editing,form);else db.createCh(form);
+    reload();setShowModal(false);setForm(EMPTY_CH);setEditing(null);
+  };
+  const edit=c=>{setForm({title:c.title,description:c.description,category:c.category,scheduled_date:c.scheduled_date,points_base:c.points_base,points_rank1_mult:c.points_rank1_mult||5,points_rank2_mult:c.points_rank2_mult||3,points_rank3_mult:c.points_rank3_mult||2,status:c.status});setEditing(c.id);setShowModal(true);};
+  const del=id=>{if(window.confirm('Supprimer ce défi ?')){db.deleteCh(id);reload();}};
+  const activate=id=>{db.challenges().filter(c=>c.status==='active').forEach(c=>db.updateCh(c.id,{status:'scheduled'}));db.updateCh(id,{status:'active'});reload();};
+  return(
+    <div>
+      <div className="fc" style={{padding:'0 12px 12px',justifyContent:'flex-end'}}>
+        <button className="btn btn-green btn-sm" onClick={()=>{setForm(EMPTY_CH);setEditing(null);setShowModal(true);}}>+ Nouveau défi</button>
+      </div>
+      {challenges.length===0&&<div className="empty"><div className="empty-icon">🏆</div><h3>Aucun défi créé</h3></div>}
+      <div style={{padding:'0 12px'}}>
+        {challenges.map(c=>(
+          <div key={c.id} className="challenge-admin-card">
+            <div className="fc gap8 mb8">
+              <span style={{fontSize:'1.3rem'}}>{CAT[c.category]?.e}</span>
+              <span className={`badge ${STATUS_BADGE[c.status]}`}>{STATUS_LABEL[c.status]}</span>
+            </div>
+            <div className="cac-title">{c.title}</div>
+            <div className="cac-meta">{new Date(c.scheduled_date).toLocaleDateString('fr-FR')} · {c.points_base} pts base · 🥇×{c.points_rank1_mult||5} 🥈×{c.points_rank2_mult||3} 🥉×{c.points_rank3_mult||2}</div>
+            <div className="cac-actions">
+              {c.status!=='active'&&<button className="btn btn-green btn-sm" onClick={()=>activate(c.id)}>▶ Activer</button>}
+              {c.status==='active'&&<span className="badge badge-green">✅ Actif</span>}
+              <button className="btn btn-outline btn-sm" onClick={()=>edit(c)}>✏️ Modifier</button>
+              <button className="btn btn-gray btn-sm" style={{color:'var(--red)'}} onClick={()=>del(c.id)}>🗑️</button>
+            </div>
+          </div>
+        ))}
+      </div>
+      {showModal&&(
+        <div className="modal-backdrop" onClick={()=>setShowModal(false)}>
+          <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+            <div className="modal-handle"/>
+            <div className="modal-title">{editing?'✏️ Modifier le défi':'🏆 Nouveau défi'}</div>
+            <form onSubmit={submit}>
+              <div className="inp-wrap"><label className="inp-label">Titre du défi *</label><input className="inp" required placeholder="Ex: Ramasse 3 déchets" value={form.title} onChange={e=>setForm({...form,title:e.target.value})}/></div>
+              <div className="inp-wrap"><label className="inp-label">Description *</label><textarea className="ta" required placeholder="Décris le défi en détail..." value={form.description} onChange={e=>setForm({...form,description:e.target.value})}/></div>
+              <div className="inp-wrap"><label className="inp-label">Catégorie</label><select className="sel" value={form.category} onChange={e=>setForm({...form,category:e.target.value})}>{Object.entries(CAT).map(([k,v])=><option key={k} value={k}>{v.e} {v.l}</option>)}</select></div>
+              <div className="inp-wrap"><label className="inp-label">Date de publication *</label><input className="inp" type="date" required value={form.scheduled_date} onChange={e=>setForm({...form,scheduled_date:e.target.value})}/></div>
+              <div className="inp-wrap"><label className="inp-label">Points de base</label><input className="inp" type="number" min="5" value={form.points_base} onChange={e=>setForm({...form,points_base:parseInt(e.target.value)||20})}/></div>
+              <div style={{background:'var(--bg)',border:'1px solid var(--border)',borderRadius:10,padding:'12px',marginBottom:14}}>
+                <p className="text-xs fw8 text-muted mb12" style={{textTransform:'uppercase',letterSpacing:'.04em'}}>Multiplicateurs de points</p>
+                <div className="fc gap10">
+                  {[{k:'points_rank1_mult',e:'🥇',l:'1er'},{k:'points_rank2_mult',e:'🥈',l:'2ème'},{k:'points_rank3_mult',e:'🥉',l:'3ème'}].map(({k,e,l})=>(
+                    <div key={k} style={{flex:1,textAlign:'center'}}>
+                      <div style={{fontSize:'1.2rem',marginBottom:4}}>{e}</div>
+                      <input className="inp" type="number" min="1" max="20" value={form[k]} onChange={ev=>setForm({...form,[k]:parseInt(ev.target.value)||1})} style={{textAlign:'center',padding:'8px 4px'}}/>
+                      <div className="text-xs text-muted mt8">{l} × {form[k]||1} = {form.points_base*(form[k]||1)} pts</div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <div className="inp-wrap"><label className="inp-label">Statut</label><select className="sel" value={form.status} onChange={e=>setForm({...form,status:e.target.value})}>{Object.entries(STATUS_LABEL).map(([k,v])=><option key={k} value={k}>{v}</option>)}</select></div>
+              {/* BIG VISIBLE SUBMIT BUTTON */}
+              <div style={{background:'var(--greenl)',border:'2px solid var(--green)',borderRadius:14,padding:'4px',marginTop:8}}>
+                <button type="submit" className="btn btn-green" style={{padding:'16px',fontSize:'1.05rem',fontWeight:900,borderRadius:11}}>
+                  {editing?'💾 Enregistrer les modifications':'✅ CRÉER LE DÉFI'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminProofs(){
+  const [proofs,setProofs]=useState([]);
+  const [filter,setFilter]=useState('pending');
+  const [selected,setSelected]=useState(null);
+  const [feedback,setFeedback]=useState('');
+  const load=()=>setProofs(db.proofs().sort((a,b)=>new Date(b.created_date)-new Date(a.created_date)));
+  useEffect(load,[]);
+  const filtered=proofs.filter(p=>filter==='all'?true:p.status===filter);
+  return(
+    <div>
+      <div style={{padding:'0 12px 12px'}}>
+        <div className="tabs">
+          {[['pending','⏳ En attente'],['validated','✅ Validées'],['rejected','❌ Refusées'],['all','📋 Toutes']].map(([v,l])=>(
+            <button key={v} className={`tab${filter===v?' active':''}`} style={{fontSize:'.72rem'}} onClick={()=>setFilter(v)}>{l}</button>
+          ))}
+        </div>
+      </div>
+      {filtered.length===0&&<div className="empty"><div className="empty-icon">📭</div><h3>Aucune preuve</h3></div>}
+      <div style={{padding:'0 12px'}}>
+        {filtered.map(proof=>{
+          const ch=db.chById(proof.challenge_id);
+          return(
+            <div key={proof.id} className="card" style={{marginBottom:12,overflow:'hidden'}}>
+              <div style={{display:'flex',gap:10,padding:'12px 14px'}}>
+                <div style={{width:64,height:64,borderRadius:10,overflow:'hidden',background:'var(--bg)',flexShrink:0,display:'flex',alignItems:'center',justifyContent:'center',fontSize:'1.5rem'}}>
+                  {proof.file_url?<img src={proof.file_url} alt="" style={{width:'100%',height:'100%',objectFit:'cover'}}/>:'📷'}
+                </div>
+                <div style={{flex:1,minWidth:0}}>
+                  <div className="fw8 text-sm">{proof.student_name}</div>
+                  <div className="text-xs text-muted">{proof.student_class} · {timeAgo(proof.created_date)}</div>
+                  {ch&&<div className="text-xs text-green mt8">🏆 {ch.title?.slice(0,30)}</div>}
+                  {!ch&&<div className="text-xs" style={{color:'var(--red)'}}>⚠️ Défi supprimé</div>}
+                  {proof.status==='validated'&&<div className="text-xs fw8 text-green mt8">✅ +{proof.points_awarded} pts · #{proof.validation_rank}</div>}
+                  {proof.rejection_feedback&&<div className="text-xs mt8" style={{color:'var(--red)'}}>Feedback: {proof.rejection_feedback}</div>}
+                </div>
+                <span className={`badge ${proof.status==='validated'?'badge-green':proof.status==='rejected'?'badge-red':'badge-yellow'}`} style={{height:'fit-content'}}>{proof.status==='validated'?'✅':proof.status==='rejected'?'❌':'⏳'}</span>
+              </div>
+              {proof.comment&&<div style={{padding:'0 14px 10px',fontSize:'.8rem',color:'var(--text2)'}}>{proof.comment}</div>}
+              {proof.status==='pending'&&ch&&(
+                <div style={{padding:'10px 14px 14px',borderTop:'1px solid var(--border)',display:'flex',gap:8}}>
+                  <button className="btn btn-green btn-sm" style={{flex:1,padding:'10px',fontSize:'.85rem',fontWeight:900}} onClick={()=>{db.validateProof(proof.id,proof.challenge_id);load();}}>✅ Valider</button>
+                  <button className="btn btn-red btn-sm" style={{flex:1,padding:'10px',fontSize:'.85rem'}} onClick={()=>{setSelected(proof);setFeedback('');}}>❌ Refuser</button>
+                </div>
+              )}
+            </div>
+          );
+        })}
+      </div>
+      {selected&&(
+        <div className="modal-backdrop" onClick={()=>setSelected(null)}>
+          <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+            <div className="modal-handle"/>
+            <div className="modal-title">Refuser la preuve</div>
+            <p className="text-sm text-muted mb12">Preuve de <strong>{selected.student_name}</strong></p>
+            <div className="inp-wrap"><label className="inp-label">Feedback (optionnel)</label><textarea className="ta" placeholder="Pourquoi ce refus ?" value={feedback} onChange={e=>setFeedback(e.target.value)}/></div>
+            <div className="fc gap8">
+              <button className="btn btn-gray" style={{flex:1}} onClick={()=>setSelected(null)}>Annuler</button>
+              <button className="btn btn-red" style={{flex:1}} onClick={()=>{db.rejectProof(selected.id,feedback);load();setSelected(null);}}>❌ Confirmer</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminUsers(){
+  const [users,setUsers]=useState([]);
+  const [selected,setSelected]=useState(null);
+  const [pts,setPts]=useState('');
+  const [ptsMode,setPtsMode]=useState('add');// add or set
+  const load=()=>setUsers(db.users());
+  useEffect(load,[]);
+  const applyPoints=()=>{
+    const n=parseInt(pts);if(isNaN(n))return;
+    if(ptsMode==='add')db.addPoints(selected.id,n);
+    else db.updateUser(selected.id,{total_points:n});
+    load();setSelected(null);setPts('');
+  };
+  return(
+    <div>
+      <div className="fc gap8 px16 mb12">
+        <span className="badge badge-green">👤 {users.filter(u=>u.role==='user').length} étudiants</span>
+        <span className="badge badge-blue">🛡️ {users.filter(u=>u.role==='admin').length} admins</span>
+      </div>
+      <div style={{padding:'0 12px'}}>
+        <div className="card">
+          {users.map(u=>(
+            <div key={u.id} className="user-admin-row">
+              <Avatar name={u.full_name} color={u.avatar_color||'green'} size={36}/>
+              <div style={{flex:1,minWidth:0}}>
+                <div className="fw8 text-sm">{u.full_name||'–'}</div>
+                <div className="text-xs text-muted">{u.email} · {u.student_class||u.role}</div>
+              </div>
+              <div className="fc gap6">
+                <span className="badge badge-green fw8">{u.total_points||0} pts</span>
+                <button className="btn btn-green btn-xs" onClick={()=>{setSelected(u);setPts('');setPtsMode('add');}}>✏️ pts</button>
+              </div>
+            </div>
+          ))}
+          {users.length===0&&<div className="empty py12"><h3>Aucun utilisateur</h3></div>}
+        </div>
+      </div>
+      {selected&&(
+        <div className="modal-backdrop" onClick={()=>setSelected(null)}>
+          <div className="modal-sheet" onClick={e=>e.stopPropagation()}>
+            <div className="modal-handle"/>
+            <div className="modal-title">Points de {selected.full_name}</div>
+            <div style={{background:'var(--greenl)',border:'1px solid var(--greenbg)',borderRadius:10,padding:'10px 14px',marginBottom:16}}>
+              <span className="text-sm">Points actuels : <strong className="text-green">{selected.total_points||0} pts</strong></span>
+            </div>
+            <div className="tabs mb12">
+              <button className={`tab${ptsMode==='add'?' active':''}`} onClick={()=>setPtsMode('add')}>➕ Ajouter/retirer</button>
+              <button className={`tab${ptsMode==='set'?' active':''}`} onClick={()=>setPtsMode('set')}>🎯 Définir total</button>
+            </div>
+            <div className="inp-wrap">
+              <label className="inp-label">{ptsMode==='add'?'Points à ajouter (négatif pour retirer)':'Nouveau total de points'}</label>
+              <input className="inp" type="number" placeholder={ptsMode==='add'?'Ex: 50 ou -20':'Ex: 150'} value={pts} onChange={e=>setPts(e.target.value)}/>
+              {ptsMode==='add'&&pts&&<p className="text-xs text-muted mt8">Résultat : {(selected.total_points||0)+parseInt(pts||0)} pts</p>}
+            </div>
+            <div className="fc gap8">
+              <button className="btn btn-gray" style={{flex:1}} onClick={()=>setSelected(null)}>Annuler</button>
+              <button className="btn btn-green" style={{flex:1}} onClick={applyPoints}>✅ Appliquer</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+function AdminSettings(){
+  const [s,setS]=useState(db.settings());
+  const [saved,setSaved]=useState(false);
+  const save=()=>{db.saveSettings(s);setSaved(true);setTimeout(()=>setSaved(false),2000);};
+  return(
+    <div style={{padding:'0 12px'}}>
+      {saved&&<div className="alert alert-ok mb12">✅ Paramètres sauvegardés !</div>}
+      <div className="card card-pad">
+        <h3 className="fw9 mb16">⏱️ Heure de publication des défis</h3>
+        <div className="fc gap12">
+          <div style={{flex:1}}>
+            <label className="inp-label">Heure</label>
+            <select className="sel" value={s.publish_hour} onChange={e=>setS({...s,publish_hour:e.target.value})}>
+              {Array.from({length:24},(_,i)=><option key={i} value={String(i).padStart(2,'0')}>{String(i).padStart(2,'0')}h</option>)}
+            </select>
+          </div>
+          <div style={{flex:1}}>
+            <label className="inp-label">Minutes</label>
+            <select className="sel" value={s.publish_minute} onChange={e=>setS({...s,publish_minute:e.target.value})}>
+              {['00','15','30','45'].map(m=><option key={m} value={m}>{m}</option>)}
+            </select>
+          </div>
+        </div>
+        <p className="text-xs text-muted mt8">Heure actuelle de publication : <strong>{s.publish_hour}h{s.publish_minute}</strong></p>
+        <button className="btn btn-green mt16" onClick={save}>💾 Sauvegarder</button>
+      </div>
+    </div>
+  );
+}
+
+/* ══════════════════════════════════════
+   MAIN APP
+══════════════════════════════════════ */
+function App(){
+  const {user,loading,logout}=useAuth();
+  const [page,setPage]=useState('home');
+  if(loading)return<div style={{display:'flex',alignItems:'center',justifyContent:'center',height:'100vh',background:'#fff'}}><div className="spin"/></div>;
+  if(!user)return<AuthScreen onAuth={()=>setPage('home')}/>;
+  const isAdmin=user.role==='admin';
+  const navigate=p=>setPage(p);
+  const pending=db.proofs().filter(p=>p.status==='pending').length;
+
+  const studentNav=[
+    {id:'home',icon:'🏠',label:'Accueil'},
+    {id:'challenge',icon:'🎯',label:'Défi'},
+    {id:'feed',icon:'📱',label:'Feed'},
+    {id:'chat',icon:'💬',label:'Chat'},
+    {id:'leaderboard',icon:'🏆',label:'Ranking'},
+    {id:'profile',icon:'👤',label:'Profil'},
+  ];
+  const adminNav=[
+    {id:'a_dash',icon:'📊',label:'Dashboard'},
+    {id:'a_ch',icon:'🏆',label:'Défis'},
+    {id:'a_proofs',icon:'📸',label:'Preuves',notif:pending},
+    {id:'a_users',icon:'👤',label:'Comptes'},
+    {id:'leaderboard',icon:'🥇',label:'Ranking'},
+    {id:'chat',icon:'💬',label:'Chat'},
+  ];
+  const nav=isAdmin?adminNav:studentNav;
+
+  const renderPage=()=>{
+    if(page==='home')return<HomeScreen navigate={navigate}/>;
+    if(page==='challenge')return<ChallengeScreen/>;
+    if(page==='feed')return<FeedScreen/>;
+    if(page==='chat')return<ChatScreen/>;
+    if(page==='leaderboard')return<LeaderboardScreen/>;
+    if(page==='profile')return<ProfileScreen logout={()=>{logout();setPage('home');}}/>;
+    if(page.startsWith('a_')||page==='admin')return<AdminScreen tab={page==='admin'?'a_dash':page} navigate={navigate}/>;
+    return<HomeScreen navigate={navigate}/>;
+  };
+
+  return(
+    <div className="app">
+      {renderPage()}
+      <nav className="bnav">
+        {nav.map(item=>(
+          <button key={item.id} className={`bnav-btn${page===item.id||page.startsWith(item.id)?' active':''}`} onClick={()=>navigate(item.id)}>
+            <div className="bnav-icon">{item.icon}{item.notif>0&&<span className="notif-badge">{item.notif}</span>}</div>
+            <span className="bnav-label">{item.label}</span>
+          </button>
+        ))}
+      </nav>
+    </div>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(<AuthProvider><App/></AuthProvider>);
+</script>
+</body>
+</html>
